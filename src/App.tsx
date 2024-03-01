@@ -11,6 +11,7 @@ import {
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import './App.css';
+import QuestionTable from './features/QuestionTable/QuestionTable';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -74,7 +75,7 @@ function App() {
               borderRadius: borderRadiusLG,
             }}
           >
-            Bill is a cat.
+            <QuestionTable/>
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
