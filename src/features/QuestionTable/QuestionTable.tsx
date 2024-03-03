@@ -87,11 +87,20 @@ const QuestionTable: React.FC = () => {
     
 
     return (
+        <div
+            style={{
+              padding: 24,
+              minHeight: 360,
+              // background: colorBgContainer,
+              // borderRadius: borderRadiusLG,
+            }}
+        >
         <Table
         columns={columns}
         dataSource={data}
         />
-    );
+      </div>
+    )
 }
 
 

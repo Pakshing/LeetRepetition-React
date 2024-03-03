@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   DesktopOutlined,
   FileOutlined,
@@ -12,37 +12,14 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import './App.css';
 import QuestionTable from './features/QuestionTable/QuestionTable';
+import Home from './pages/Home';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AppHeader from './components/Layout/AppHeader';
+import AppFooter from './components/Layout/AppFooter';
+import { generate as randomStringGenerate} from 'randomstring'
 
-const { Header, Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
-
-const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Files', '9', <FileOutlined />),
-];
-
+const { Content, Footer, Sider } = Layout;
 function App() {
 
   const [collapsed, setCollapsed] = useState(false);
@@ -50,38 +27,42 @@ function App() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  useEffect(() => {
+    console.log("App mounted")
+    if(localStorage.getItem("user_email") === null){
+        const user_email = randomStringGenerate(100)+"@localstorage.com";
+        localStorage.setItem("user_email",user_email)
+        
+        console.log("User email created" + localStorage.getItem("user_email"))
+    }else{
+      console.log("User email already exists" + localStorage.getItem("user_email"))
+    }
+
+  }, [])
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className="demo-logo-vertical" />
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
-      </Sider>
-      <Layout>
-        <Header style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <b style={{ color: "white", fontSize: "1.5rem" }}>
-            <ClockCircleOutlined style={{marginRight:"1rem"}}/> Leetcode Spaced Repetition Tool
-          </b>
-        </Header>
-        <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            <QuestionTable/>
-          </div>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Leet Repetition ©{new Date().getFullYear()} Created by Pak Shing Kan
-        </Footer>
-      </Layout>    </Layout>
+      <AppHeader/>
+        <Router>
+          <Content style={{ margin: '16px 16px' }}>
+            <div
+              style={{
+                padding: 24,
+                minHeight: "90vh",
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+              }}
+            >
+              
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/table" element={<QuestionTable />} />
+                </Routes>
+            </div>
+          </Content>
+        </Router>
+      <AppFooter/>
+    </Layout>
   );
 }
 
