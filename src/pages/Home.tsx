@@ -3,7 +3,7 @@ import LoginButton from '../components/Button/LoginButton'
 
 function Home() {
   return (
-    <div>Home <LoginButton/></div>
+    <div>Welcome {localStorage.getItem("user_email")} <LoginButton/></div>
     
   )
 }

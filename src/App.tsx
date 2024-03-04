@@ -16,7 +16,8 @@ import Home from './pages/Home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AppHeader from './components/Layout/AppHeader';
 import AppFooter from './components/Layout/AppFooter';
-import { generate as randomStringGenerate} from 'randomstring'
+import { createUser,getUser } from './features/user/userAPI';
+
 
 
 const { Content, Footer, Sider } = Layout;
@@ -28,14 +29,15 @@ function App() {
   } = theme.useToken();
 
   useEffect(() => {
-    console.log("App mounted")
+    if(localStorage.getItem("user_id") !== null){
+      console.log("User id already exists\n")
+      return;
+    }
     if(localStorage.getItem("user_email") === null){
-        const user_email = randomStringGenerate(100)+"@localstorage.com";
-        localStorage.setItem("user_email",user_email)
-        
-        console.log("User email created" + localStorage.getItem("user_email"))
+        createUser();
     }else{
-      console.log("User email already exists" + localStorage.getItem("user_email"))
+      console.log("User email already exists\n" + localStorage.getItem("user_email"))
+      getUser(localStorage.getItem("user_email")|| "");
     }
 
   }, [])
