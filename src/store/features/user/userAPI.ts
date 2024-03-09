@@ -1,6 +1,7 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
+import {setUser} from './UserSlice'
 import { generate as randomStringGenerate} from 'randomstring'
+
 
 const backendHost = process.env.BACKEND_HOST || 'http://localhost:8080';
 
@@ -13,7 +14,11 @@ export async function createUser() {
       if (response.status === 201) {
         console.log('User created successfully');
         localStorage.setItem("user_email",user_email)
-        return 'Success';
+
+        console.log(response.data)
+        localStorage.setItem("user",JSON.stringify(response.data))
+        localStorage.setItem("user_id",response.data.id)
+        return response.data;
       } else {
         console.error('User creation failed');
         return 'Failure';
@@ -33,9 +38,16 @@ export async function createUser() {
           })
       if (response.status === 200) {
         console.log('User fetched successfully',response.data);
+        // use UserSlice to set a user state
+        // Assuming you have imported the UserSlice from your Redux store
+        
+
+        // Set the user state using the response data
         localStorage.setItem("user",JSON.stringify(response.data))
+        setUser(response.data);
         localStorage.setItem("user_id",response.data.id)
-        return "Success";
+        console.log(response.data)
+        return response.data;
       } else {
         console.error('User fetch failed');
         return 'Failure';

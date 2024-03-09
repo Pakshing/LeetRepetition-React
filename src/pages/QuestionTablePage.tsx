@@ -1,7 +1,7 @@
 import React from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Button, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
-import {tagColors,difficultyColors} from '../../utils/TableItemColors'
+import {tagColors,difficultyColors} from '../utils/TableItemColors'
 
 interface DataType {
     key: string;
@@ -83,10 +83,11 @@ const data: DataType[] = [
     }
 ];
 
-const QuestionTable: React.FC = () => {
+const QuestionTablePage: React.FC = () => {
     
 
     return (
+       
         <div
             style={{
               padding: 24,
@@ -95,6 +96,11 @@ const QuestionTable: React.FC = () => {
               // borderRadius: borderRadiusLG,
             }}
         >
+        <div style={{display:"flex",gap:"1rem"}}>
+        <Button type="primary">Create Deck</Button>
+        <Button type="primary">Add question</Button>
+        </div>
+        
         <Table
         columns={columns}
         dataSource={data}
@@ -106,4 +112,4 @@ const QuestionTable: React.FC = () => {
 
 
 
-export default QuestionTable;
+export default QuestionTablePage;

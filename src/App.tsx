@@ -11,34 +11,38 @@ import {
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import './App.css';
-import QuestionTable from './features/QuestionTable/QuestionTable';
+import QuestionTable from './pages/QuestionTablePage';
 import Home from './pages/Home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AppHeader from './components/Layout/AppHeader';
 import AppFooter from './components/Layout/AppFooter';
-import { createUser,getUser } from './features/user/userAPI';
+import { createUser,getUser } from './store/features/user/userAPI';
+import { useAppSelector, useAppDispatch } from './store/store'
+import { UserState,setUser } from './store/features/user/UserSlice';
 
 
 
 const { Content, Footer, Sider } = Layout;
-function App() {
 
+
+
+function App() {
+  const dispatch = useAppDispatch();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+
+
+  if(localStorage.getItem("user_email") === null && localStorage.getItem("user_id") === null){
+    createUser();
+  }else{
+    getUser(String(localStorage.getItem("user_email")));
+  
+  }
   useEffect(() => {
-    if(localStorage.getItem("user_id") !== null){
-      console.log("User id already exists\n")
-      return;
-    }
-    if(localStorage.getItem("user_email") === null){
-        createUser();
-    }else{
-      console.log("User email already exists\n" + localStorage.getItem("user_email"))
-      getUser(localStorage.getItem("user_email")|| "");
-    }
+    
 
   }, [])
 
