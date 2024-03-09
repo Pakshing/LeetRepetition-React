@@ -38,11 +38,10 @@ export const fetchQuetions = createAsyncThunk('questions/fetch', async (thunkAPI
 
 // Create the slice
 export const questionTableSlice = createSlice({
-    name: 'questionTable',
+    name: 'questionTableSlice',
     initialState,
     reducers: {
-
-        
+      
     },
     extraReducers: (builder) => {
         builder.addCase(fetchQuetions.pending, (state) => {
@@ -60,6 +59,6 @@ export const questionTableSlice = createSlice({
     }
 });
 
-// Export the actions and reducer
-export const { actions, reducer } = questionTableSlice;
+
+
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import {tagColors,difficultyColors} from '../utils/TableItemColors'
+import { useAppDispatch, useAppSelector } from '../store/store';
 
 interface DataType {
     key: string;
@@ -84,6 +85,10 @@ const data: DataType[] = [
 ];
 
 const QuestionTablePage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const questionStore = useAppSelector((state) => state.questionTableStore);
+  console.log("questionStore",questionStore)
+
     
 
     return (
