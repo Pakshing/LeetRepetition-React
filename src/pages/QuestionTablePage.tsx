@@ -1,23 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import {tagColors,difficultyColors} from '../utils/TableItemColors'
-import { useAppDispatch, useAppSelector } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../app/store';
+import { findQuestionByUserId } from '../store/features/questionTable/questionTableSlice';
+import { LeetCodeQuestionModel } from '../data/LeetCodeQuestionModel';
+import AddQuestionModal from '../components/Modal/AddQuestionModal';
 
-interface DataType {
-    key: string;
-    title: string;
-    difficulty: string;
-    lastCompleted: string;
-    category: string;
-    tags: string[];
-}
 
-const columns: TableProps<DataType>['columns'] = [
+const columns: TableProps<LeetCodeQuestionModel>['columns'] = [
   {
     title: 'Title',
-    dataIndex: 'title',
-    key: 'title',
+    dataIndex: 'name',
+    key: 'name',
     render: (text) => <a>{text}</a>,
   },
   {
@@ -30,9 +25,9 @@ const columns: TableProps<DataType>['columns'] = [
   </Tag>,
   },
   {
-    title: 'Last Completed',
-    dataIndex: 'lastCompleted',
-    key: 'lastCompleted',
+    title: 'Last Completion',
+    dataIndex: 'last_completion',
+    key: 'last_completion',
   },
   {
     title: 'Catergory',
@@ -49,11 +44,11 @@ const columns: TableProps<DataType>['columns'] = [
     dataIndex: 'tags',
     render: (_, { tags }) => (
       <>
-        {tags.map((tag) => {
+        {tags.map((tag,index) => {
           let color = tagColors(tag);
           
           return (
-            <Tag color={color} key={tag}>
+            <Tag color={color} key={tag + index}>
               {tag.toUpperCase()}
             </Tag>
           );
@@ -73,21 +68,20 @@ const columns: TableProps<DataType>['columns'] = [
   },
 ];
 
-const data: DataType[] = [
-    {
-        key: '1',
-        title: 'Two Sum',
-        difficulty: 'Easy',
-        lastCompleted: '2021-10-01',
-        category:"array",
-        tags: ['array', 'hash table']
-    }
-];
+
 
 const QuestionTablePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const questionStore = useAppSelector((state) => state.questionTableStore);
-  console.log("questionStore",questionStore)
+  const questions = useAppSelector((state) => state.questionTableStore.questions);
+
+  useEffect(() => {
+    if(localStorage.getItem("user_id") !== null && localStorage.getItem("user_id") !== undefined){
+      dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)))
+      
+    }
+    
+  }
+  , [dispatch]);
 
     
 
@@ -103,12 +97,13 @@ const QuestionTablePage: React.FC = () => {
         >
         <div style={{display:"flex",gap:"1rem"}}>
         <Button type="primary">Create Deck</Button>
-        <Button type="primary">Add question</Button>
+        <AddQuestionModal/>
         </div>
         
         <Table
         columns={columns}
-        dataSource={data}
+        dataSource={questions}
+        rowKey={(record) => record.id.toString()}
         />
       </div>
     )

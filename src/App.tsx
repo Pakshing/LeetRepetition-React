@@ -16,9 +16,8 @@ import Home from './pages/Home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AppHeader from './components/Layout/AppHeader';
 import AppFooter from './components/Layout/AppFooter';
-import { createUser,getUser } from './store/features/user/userAPI';
-import { useAppSelector, useAppDispatch } from './store/store'
-import { UserState,setUser } from './store/features/user/UserSlice';
+import { useAppSelector, useAppDispatch } from './app/store'
+import { getUser,createUser } from './store/features/user/UserSlice';
 
 
 
@@ -28,6 +27,7 @@ const { Content, Footer, Sider } = Layout;
 
 function App() {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.user);
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -35,15 +35,15 @@ function App() {
 
 
 
-  if(localStorage.getItem("user_email") === null && localStorage.getItem("user_id") === null){
-    createUser();
-  }else{
-    getUser(String(localStorage.getItem("user_email")));
-  
-  }
-  useEffect(() => {
-    
 
+  useEffect(() => {
+    if(localStorage.getItem("user_email") === null && localStorage.getItem("user_id") === null){
+      dispatch(createUser());
+    }else{
+      console.log("App",localStorage.getItem("user_email") as string)
+      dispatch(getUser(localStorage.getItem("user_email") as string));
+    
+    }
   }, [])
 
   return (

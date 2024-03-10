@@ -26,15 +26,18 @@ const initialState: QuestionTableState = {
 
 };
 
-export const fetchQuetions = createAsyncThunk('questions/fetch', async (thunkAPI) => {
-    let config = {
-        method: 'get',
-        url: backendHost+'/api/v1/questions/get',
-    };
-    const response = await axios.request(config)
+export const findQuestionByUserId = createAsyncThunk(
+  'questions/find',
+  async (owner_id: number, thunkAPI) => {
+    const response = await axios.get('http://localhost:8080/api/v1/questions/find', {
+      params: {
+        owner_id: owner_id
+      }
+    });
+    console.log(response.data)
     return response.data;
-}
-)
+  }
+);
 
 // Create the slice
 export const questionTableSlice = createSlice({
@@ -44,14 +47,14 @@ export const questionTableSlice = createSlice({
       
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchQuetions.pending, (state) => {
+        builder.addCase(findQuestionByUserId.pending, (state) => {
           state.loading = "pending";
         });
-        builder.addCase(fetchQuetions.fulfilled, (state, action) => {
+        builder.addCase(findQuestionByUserId.fulfilled, (state, action) => {
           state.loading = "succeeded";
           state.questions = action.payload;
         });
-        builder.addCase(fetchQuetions.rejected, (state, action) => {
+        builder.addCase(findQuestionByUserId.rejected, (state, action) => {
           state.loading = "failed";
           state.questions = [];
           state.error = action.payload as string;

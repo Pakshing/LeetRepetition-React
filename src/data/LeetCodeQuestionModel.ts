@@ -3,10 +3,10 @@ export interface LeetCodeQuestionModel {
     name: string;
     url: string;
     category: string;
-    deck_id: number;
+    owner_id: number;
     tags: string[];
     date_created: Date;
     last_completion: Date;
-    difficulty: "Easy" | "Medium" | "Hard";
+    difficulty: "EASY" | "MEDIUM" | "HARD";
     next_review: Date;
 }

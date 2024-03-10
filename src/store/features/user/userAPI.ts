@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {setUser} from './UserSlice'
 import { generate as randomStringGenerate} from 'randomstring'
 
 
@@ -30,6 +29,7 @@ export async function createUser() {
   }
 
   export async function getUser(email:string) {
+    console.log("Email",email)
     try {
         const response = await axios.get('http://localhost:8080/api/v1/users/find', {
             params: {
@@ -43,8 +43,9 @@ export async function createUser() {
         
 
         // Set the user state using the response data
-        localStorage.setItem("user",JSON.stringify(response.data))
-        setUser(response.data);
+        //localStorage.setItem("user",JSON.stringify(response.data))
+  
+        localStorage.setItem("user_email",response.data.email)
         localStorage.setItem("user_id",response.data.id)
         console.log(response.data)
         return response.data;
