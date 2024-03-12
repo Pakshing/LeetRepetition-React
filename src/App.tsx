@@ -57,6 +57,8 @@ function App() {
                 minHeight: "90vh",
                 background: colorBgContainer,
                 borderRadius: borderRadiusLG,
+                backgroundColor: "#c8cace",
+
               }}
             >
               

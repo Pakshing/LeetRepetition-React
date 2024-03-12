@@ -1,0 +1,52 @@
+import axios from 'axios';
+
+const backendHost = process.env.BACKEND_HOST || 'http://localhost:8080';
+
+
+
+interface QuestionState {
+    url: string;
+    title: string;
+    difficulty: string;
+    category: string;
+    next_review: string
+    owner_id: number;
+}
+
+const next_review_long = (review_in:string)=>{
+    if(review_in === "never"){
+        return null
+    }
+    const today = new Date();
+    const next_review_date = new Date(today);
+    next_review_date.setDate(next_review_date.getDate() + parseInt(review_in));
+    console.log(next_review_date.toDateString())
+    return next_review_date.getTime();
+}
+
+export async function addNewQuestion(question:QuestionState) {
+    try {
+        const review_in = question.next_review === "never" ? null : next_review_long(question.next_review);
+        question.owner_id = parseInt(localStorage.getItem("user_id") as string)
+      const response = await axios.post(backendHost+'/api/v1/questions', {
+        url: question.url,
+        title: question.title,
+        difficulty: question.difficulty,
+        category: question.category,
+        next_review_long: review_in,
+        owner_id: question.owner_id
+      });
+      if (response.status === 201) {
+        console.log('question created successfully');
+        console.log(response.data)
+        return response.data;
+      } else {
+        console.error('Question creation failed');
+        return 'Failure';
+      }
+    } catch (error) {
+      console.error(error);
+      return 'Failure';
+    }
+  }
+

@@ -1,6 +1,6 @@
 export interface LeetCodeQuestionModel {
     id: number;
-    name: string;
+    title: string;
     url: string;
     category: string;
     owner_id: number;

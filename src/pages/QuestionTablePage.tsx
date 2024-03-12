@@ -11,8 +11,8 @@ import AddQuestionModal from '../components/Modal/AddQuestionModal';
 const columns: TableProps<LeetCodeQuestionModel>['columns'] = [
   {
     title: 'Title',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'title',
+    key: 'title',
     render: (text) => <a>{text}</a>,
   },
   {
@@ -28,9 +28,10 @@ const columns: TableProps<LeetCodeQuestionModel>['columns'] = [
     title: 'Last Completion',
     dataIndex: 'last_completion',
     key: 'last_completion',
+    render: (isoString) => <text>{new Date(isoString).toDateString()}</text>,
   },
   {
-    title: 'Catergory',
+    title: 'Category',
     dataIndex: 'category',
     key: 'category',
     render: (tag) => 
@@ -38,24 +39,24 @@ const columns: TableProps<LeetCodeQuestionModel>['columns'] = [
     {tag.toUpperCase()}
   </Tag>,
   },
-  {
-    title: 'tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag,index) => {
-          let color = tagColors(tag);
+  // {
+  //   title: 'tags',
+  //   key: 'tags',
+  //   dataIndex: 'tags',
+  //   render: (_, { tags }) => (
+  //     <>
+  //       {tags.map((tag,index) => {
+  //         let color = tagColors(tag);
           
-          return (
-            <Tag color={color} key={tag + index}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
+  //         return (
+  //           <Tag color={color} key={tag + index}>
+  //             {tag.toUpperCase()}
+  //           </Tag>
+  //         );
+  //       })}
+  //     </>
+  //   ),
+  // },
   {
     title: 'Action',
     key: 'action',
@@ -95,7 +96,7 @@ const QuestionTablePage: React.FC = () => {
               // borderRadius: borderRadiusLG,
             }}
         >
-        <div style={{display:"flex",gap:"1rem"}}>
+        <div style={{display:"flex",gap:"1rem", marginBottom:"1rem"}}>
         <Button type="primary">Create Deck</Button>
         <AddQuestionModal/>
         </div>
