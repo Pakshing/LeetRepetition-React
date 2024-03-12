@@ -40,12 +40,15 @@ export async function addNewQuestion(question:QuestionState) {
         console.log('question created successfully');
         console.log(response.data)
         return response.data;
-      } else {
-        console.error('Question creation failed');
+      } else{
+        alert('Question creation failed');
         return 'Failure';
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error : any) {
+        if(error.response.status === 409){
+            alert('Question already exists');
+        }
+      console.error(error.message);
       return 'Failure';
     }
   }
