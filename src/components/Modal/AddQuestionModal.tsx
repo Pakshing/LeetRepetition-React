@@ -61,20 +61,22 @@ const AddQuestionModal: React.FC = () => {
           initialValues={{ modifier: 'public' }}
         >
             <Form.Item
-            name="url"
-            label="URL"
-            rules={[{ required: true }, { type: 'url', warningOnly: true }, { type: 'string', min: 6 }]}
+                name="url"
+                label="URL"
+                rules={[
+                    { required: true },
+                    { type: 'url', warningOnly: true },
+                    { type: 'string', min: 6 },
+                    {
+                        validator: (_, value) => {
+                            const regex = /^https:\/\/leetcode\.com\/problems\//;
+                            return regex.test(value) ? Promise.resolve() : Promise.reject(new Error('URL must match "https://leetcode.com/problems/"'));
+                        },
+                    }
+                ]}
             >
-            <Input placeholder="https://leetcode.com/problems/two-sum/description/" />
+                <Input placeholder="https://leetcode.com/problems/two-sum/description/" />
             </Form.Item>
-
-            <Form.Item
-                name="title"
-                label="Title"
-                rules={[{ required: true, message: 'Please input the question!' }]}
-            >
-            <Input placeholder="Two Sum" />
-          </Form.Item>
 
           <Form.Item label="Difficulty" name="difficulty" rules={[{ required: true, message: 'Please select a difficulty level!' }]}>
             <Radio.Group>

@@ -13,6 +13,18 @@ interface QuestionState {
     owner_id: number;
 }
 
+function getProblemNameFromUrl(url:string) {
+    const urlParts = url.split('/');
+    const problemIndex = urlParts.indexOf('problems');
+    const problemName = urlParts[problemIndex + 1];
+    const problemNameCapitalized = problemName
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+    return problemNameCapitalized;
+  }
+  
+
 const next_review_long = (review_in:string)=>{
     if(review_in === "never"){
         return null
@@ -28,6 +40,7 @@ export async function addNewQuestion(question:QuestionState) {
     try {
         const review_in = question.next_review === "never" ? null : next_review_long(question.next_review);
         question.owner_id = parseInt(localStorage.getItem("user_id") as string)
+        question.title = getProblemNameFromUrl(question.url);
       const response = await axios.post(backendHost+'/api/v1/questions', {
         url: question.url,
         title: question.title,
