@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, Space, Radio, Tag } from 'antd';
 import { addNewQuestion } from '../../store/features/question/QuestionAPI';
+import { useAppDispatch } from '../../app/store';
+import { findQuestionByUserId} from '../../store/features/questionTable/questionTableSlice'
 
 
 const layout = {
@@ -13,8 +15,9 @@ const layout = {
   };
 
 const AddQuestionModal: React.FC = () => {
-  const [visible, setVisible] = useState(false);
-  const [form] = Form.useForm();
+    const dispatch = useAppDispatch();
+    const [visible, setVisible] = useState(false);
+    const [form] = Form.useForm();
 
   const showModal = () => {
     setVisible(true);
@@ -25,12 +28,13 @@ const AddQuestionModal: React.FC = () => {
   const handleOk = () => {
     form
       .validateFields()
-      .then(values => {
-        //form.resetFields();
-        console.log(values); // Here you can handle the form values, e.g., send them to the server
-        const response = addNewQuestion(values);
-        console.log("addNewQuestion",response)
-        //setVisible(false);
+      .then(async (values) => {
+        const result = await addNewQuestion(values,values.review_in_days_str);
+        if (result !== 'Failure') {
+            dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));
+            setVisible(false);
+            form.resetFields();
+          }
       })
       .catch(info => {
         console.log('Validate Failed:', info);
@@ -104,7 +108,7 @@ const AddQuestionModal: React.FC = () => {
             <Radio.Button value="SORTING">Sorting</Radio.Button>
             </Radio.Group>
         </Form.Item>
-        <Form.Item label="Next Review Date" name="next_review" rules={[{ required: true, message: 'Please select an option!' }]}>
+        <Form.Item label="Next Review Date" name="review_in_days_str" rules={[{ required: true, message: 'Please select an option!' }]}>
             <Radio.Group>
             <Radio.Button value="1">Tomorrow</Radio.Button>
             <Radio.Button value="2">2 Days</Radio.Button>

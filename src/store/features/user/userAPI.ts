@@ -31,7 +31,7 @@ export async function createUser() {
   export async function getUser(email:string) {
     console.log("Email",email)
     try {
-        const response = await axios.get('http://localhost:8080/api/v1/users/find', {
+        const response = await axios.get(backendHost+'/api/v1/users/find', {
             params: {
               email: email
             }
