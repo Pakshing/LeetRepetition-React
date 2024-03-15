@@ -64,7 +64,7 @@ export async function addNewQuestion(question:LeetCodeQuestionModel, review_in_d
       }
     } catch (error : any) {
         if(error.response.status === 409){
-            alert('Question already exists');
+            alert('Failed to add question.');
         }
       console.error(error.message);
       return 'Failure';

@@ -37,7 +37,7 @@ function App() {
 
 
   useEffect(() => {
-    if(localStorage.getItem("user_email") === null && localStorage.getItem("user_id") === null){
+    if(localStorage.getItem("user_email") === null || localStorage.getItem("user_id") === null){
       dispatch(createUser());
     }else{
       console.log("App",localStorage.getItem("user_email") as string)
