@@ -126,8 +126,12 @@ export const get_next_review_string = (isoString: string | null) => {
     // Remove time parts of today's date
     today.setHours(0, 0, 0, 0);
   
+
     if (date < today) {
-      return "Over due";
+      // Calculate the difference in days
+      const diffInTime = today.getTime() - date.getTime();
+      const diffInDays = Math.ceil(diffInTime / (1000 * 60 * 60 * 24));
+      return `Overdue by ${diffInDays} day(s)`;
     }
   
     if (
@@ -153,6 +157,6 @@ export const get_next_review_string = (isoString: string | null) => {
     const diffInTime = date.getTime() - today.getTime();
     const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
   
-    return `In ${diffInDays} days`;
+    return `In ${diffInDays} day(s)`;
   };
 

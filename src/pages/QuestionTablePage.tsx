@@ -100,7 +100,7 @@ const QuestionTablePage: React.FC = () => {
         today.setHours(0, 0, 0, 0);
         const nextReviewDate = new Date(question.next_review);
         nextReviewDate.setHours(0, 0, 0, 0);
-        return nextReviewDate.getTime() === today.getTime();
+        return nextReviewDate.getTime() <= today.getTime() && question.next_review !== null;
       })
     : questions;
 
