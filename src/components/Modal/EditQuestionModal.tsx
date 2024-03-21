@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, Space, Radio, Tag } from 'antd';
-import { addNewQuestion, get_next_review_long, updateQuestion, daysFromTodayStr } from '../../store/features/question/QuestionAPI';
+import { addNewQuestion, get_next_review_long, updateQuestion, daysFromTodayStr, editQuestion } from '../../store/features/question/QuestionAPI';
 import { useAppDispatch } from '../../app/store';
 import { findQuestionByUserId} from '../../store/features/questionTable/questionTableSlice'
 import { LeetCodeQuestionModel } from '../../data/LeetCodeQuestionModel';
@@ -40,7 +40,7 @@ type EditQuestionModalProps = {
         modifiedQuestion.difficulty = values.difficulty;
         modifiedQuestion.category = values.category;
         modifiedQuestion.next_review_long = values.review_in_days_str === "never" ? null : get_next_review_long(values.review_in_days_str);
-        const result = await updateQuestion(modifiedQuestion);
+        const result = await editQuestion(modifiedQuestion);
         if (result !== 'Failure') {
             dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));
             setVisible(false);

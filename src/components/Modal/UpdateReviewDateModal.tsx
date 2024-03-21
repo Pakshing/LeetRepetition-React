@@ -26,7 +26,6 @@ type UpdateReviewDateModalProps = {
         let review_in_long = review_in_days === "never" ? null : get_next_review_long(review_in_days);
         let modifiedQuestion = { ...question };
         modifiedQuestion.next_review_long = review_in_long ? Number(review_in_long) : null;
-        modifiedQuestion.last_completion = new Date();
         const result = await updateQuestion(modifiedQuestion);
         if (result !== 'Failure') {
             dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));

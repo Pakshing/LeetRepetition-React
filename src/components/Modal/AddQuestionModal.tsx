@@ -98,14 +98,17 @@ const AddQuestionModal: React.FC = () => {
             <Radio.Button value="HASHING">Map/Set</Radio.Button>
             <Radio.Button value="BINARY_SEARCH">Binary Search</Radio.Button>
             <Radio.Button value="HEAP">Heap/Priority Queue</Radio.Button>
-            <Radio.Button value="STACK">Stack</Radio.Button>
-            <Radio.Button value="QUEUE">Queue</Radio.Button>
+            <Radio.Button value="SLIDING_WINDOW">Sliding Window</Radio.Button>
+            <Radio.Button value="STACK&QUEUE">Stack/Queue</Radio.Button>
             <Radio.Button value="TREE">Tree</Radio.Button>
             <Radio.Button value="GRAPH">Graph</Radio.Button>
             <Radio.Button value="DP">Dynamic Programming</Radio.Button>
             <Radio.Button value="GREEDY">Greedy</Radio.Button>
-            <Radio.Button value="MATH">Math</Radio.Button>
             <Radio.Button value="SORTING">Sorting</Radio.Button>
+            <Radio.Button value="BACKTRACKING">Backtracking</Radio.Button>
+            <Radio.Button value="INTERVALS">Intervals</Radio.Button>
+            <Radio.Button value="MATH&GEOMEYRT">Math & Geometry</Radio.Button>
+            <Radio.Button value="BIT_MANIPULATION">Bit Manipulation</Radio.Button>
             </Radio.Group>
         </Form.Item>
         <Form.Item label="Next Review Date" name="review_in_days_str" rules={[{ required: true, message: 'Please select an option!' }]}>
