@@ -28,9 +28,27 @@ function getProblemNameFromUrl(url:string) {
       .join(' ');
     return problemNameCapitalized;
   }
-  
 
-const get_next_review_long = (review_in:string)=>{
+export function daysFromTodayStr(review_date: Date | null): string {
+  if(review_date === null){
+    console.log("return never")
+    return "never"
+  }else{
+    const today = new Date();
+    const date = new Date(review_date);
+
+    // Remove time parts of today's date
+    today.setHours(0, 0, 0, 0);
+  
+    // Calculate the difference in days
+    const diffInTime = date.getTime() - today.getTime();
+    const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+    
+    return String(diffInDays);
+  }
+}
+
+export const get_next_review_long = (review_in:string)=>{
     if(review_in === "never"){
         return null
     }
@@ -70,18 +88,11 @@ export async function addNewQuestion(question:LeetCodeQuestionModel, review_in_d
       return 'Failure';
     }
   }
-export async function updateQuestion(question:LeetCodeQuestionModel, review_in_days:string) {
+export async function updateQuestion(question:LeetCodeQuestionModel) {
     try {
-        let review_in = review_in_days === "never" ? null : get_next_review_long(review_in_days);
-        review_in = review_in ? Number(review_in) : null;
-
         const response = await axios.put(backendHost+`/api/v1/questions/update/${question.id}`, {
-            url: question.url,
-            title: question.title,
-            difficulty: question.difficulty,
-            category: question.category,
-            next_review_long: review_in,
-            owner_id: question.owner_id
+            next_review_long: question.next_review_long,
+            owner_id: question.owner_id,
           });
 
         if (response.status === 200) {
@@ -97,6 +108,29 @@ export async function updateQuestion(question:LeetCodeQuestionModel, review_in_d
     }
 }
 
+export async function editQuestion(question:LeetCodeQuestionModel) {
+  try {
+      const response = await axios.put(backendHost+`/api/v1/questions/edit/${question.id}`, {
+          url: question.url,
+          title: question.title,
+          difficulty: question.difficulty,
+          category: question.category,
+          next_review_long: question.next_review_long,
+          owner_id: question.owner_id,
+        });
+
+      if (response.status === 200) {
+          console.log('Question updated successfully');
+          return response.data;
+      } else {
+          console.error('Question update failed');
+          return 'Failure';
+      }
+  } catch (error: any) {
+      console.error(error.message);
+      return 'Failure';
+  }
+}
 export async function deleteQuestion(id:number) {
     try {
         const response = await axios.delete(backendHost+`/api/v1/questions/${id}`);

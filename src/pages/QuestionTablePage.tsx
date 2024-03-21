@@ -8,6 +8,7 @@ import { LeetCodeQuestionModel } from '../data/LeetCodeQuestionModel';
 import AddQuestionModal from '../components/Modal/AddQuestionModal';
 import { get_next_review_string, deleteQuestion } from '../store/features/question/QuestionAPI'; 
 import UpdateReviewDateModal from '../components/Modal/UpdateReviewDateModal';
+import EditQuestionModal from '../components/Modal/EditQuestionModal';
 
 
 
@@ -70,7 +71,7 @@ const QuestionTablePage: React.FC = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-        <Button >Edit</Button>        
+        <EditQuestionModal  question={record}/>   
         <Button danger onClick={() => handleDelete(record.id)}>Delete</Button>     
         </Space>
       ),

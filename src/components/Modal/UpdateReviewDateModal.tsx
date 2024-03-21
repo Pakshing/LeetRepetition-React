@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, Form, Radio } from 'antd';
-import { LeetCodeQuestionModel } from '../../data/LeetCodeQuestionModel';
-import {QuestionState, updateQuestion} from '../../store/features/question/QuestionAPI';
+import {QuestionState, updateQuestion, get_next_review_long} from '../../store/features/question/QuestionAPI';
 import { useAppDispatch } from '../../app/store';
 import { findQuestionByUserId} from '../../store/features/questionTable/questionTableSlice'
+import { LeetCodeQuestionModel } from '../../data/LeetCodeQuestionModel';
 
 
 type UpdateReviewDateModalProps = {
@@ -21,7 +21,13 @@ type UpdateReviewDateModalProps = {
 
     const handleOk = async() => {
         form.submit();
-        const result = await updateQuestion(question, form.getFieldValue('next_review'));
+
+        let review_in_days = form.getFieldValue('next_review')
+        let review_in_long = review_in_days === "never" ? null : get_next_review_long(review_in_days);
+        let modifiedQuestion = { ...question };
+        modifiedQuestion.next_review_long = review_in_long ? Number(review_in_long) : null;
+        modifiedQuestion.last_completion = new Date();
+        const result = await updateQuestion(modifiedQuestion);
         if (result !== 'Failure') {
             dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));
           }

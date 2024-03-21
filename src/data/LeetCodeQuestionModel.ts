@@ -9,5 +9,5 @@ export interface LeetCodeQuestionModel {
     last_completion: Date;
     difficulty: "EASY" | "MEDIUM" | "HARD";
     next_review: Date;
-    next_review_long: string;
+    next_review_long: number | null;
 }

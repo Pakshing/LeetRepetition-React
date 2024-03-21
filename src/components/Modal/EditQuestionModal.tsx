@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, Space, Radio, Tag } from 'antd';
-import { addNewQuestion } from '../../store/features/question/QuestionAPI';
+import { addNewQuestion, get_next_review_long, updateQuestion, daysFromTodayStr } from '../../store/features/question/QuestionAPI';
 import { useAppDispatch } from '../../app/store';
 import { findQuestionByUserId} from '../../store/features/questionTable/questionTableSlice'
+import { LeetCodeQuestionModel } from '../../data/LeetCodeQuestionModel';
 
 
 const layout = {
@@ -14,7 +15,10 @@ const layout = {
     wrapperCol: { offset: 8, span: 16 },
   };
 
-const EditQuestionModal: React.FC = () => {
+type EditQuestionModalProps = {
+    question: LeetCodeQuestionModel;
+  };
+  const EditQuestionModal: React.FC<EditQuestionModalProps> = ({ question }) => {
     const dispatch = useAppDispatch();
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
@@ -23,13 +27,20 @@ const EditQuestionModal: React.FC = () => {
     setVisible(true);
   };
 
+  console.log(question)
+
 
 
   const handleOk = () => {
     form
       .validateFields()
       .then(async (values) => {
-        const result = await addNewQuestion(values,values.review_in_days_str);
+        let modifiedQuestion = { ...question };
+        modifiedQuestion.url = values.url;
+        modifiedQuestion.difficulty = values.difficulty;
+        modifiedQuestion.category = values.category;
+        modifiedQuestion.next_review_long = values.review_in_days_str === "never" ? null : get_next_review_long(values.review_in_days_str);
+        const result = await updateQuestion(modifiedQuestion);
         if (result !== 'Failure') {
             dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));
             setVisible(false);
@@ -50,10 +61,10 @@ const EditQuestionModal: React.FC = () => {
   return (
     <div>
       <Button type="primary" onClick={showModal}>
-        Add question
+        Edit
       </Button>
       <Modal
-        title="Add Question"
+        title="Edit Question"
         open={visible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -62,7 +73,12 @@ const EditQuestionModal: React.FC = () => {
           form={form}
           layout="vertical"
           name="form_in_modal"
-          initialValues={{ modifier: 'public' }}
+          initialValues={{
+            url: question.url,
+            difficulty: question.difficulty,
+            category: question.category,
+            review_in_days_str: daysFromTodayStr(question.next_review),
+          }}
         >
             <Form.Item
                 name="url"
