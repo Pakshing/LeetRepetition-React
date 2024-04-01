@@ -27,7 +27,7 @@ const { Content, Footer, Sider } = Layout;
 
 function App() {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAppSelector((state) => state.userStore.user);
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -38,11 +38,7 @@ function App() {
 
   useEffect(() => {
     if(localStorage.getItem("user_email") === null || localStorage.getItem("user_id") === null){
-      dispatch(createUser());
-    }else{
-      console.log("App",localStorage.getItem("user_email") as string)
-      dispatch(getUser(localStorage.getItem("user_email") as string));
-    
+      //dispatch(createUser({email:"",loginMethod:""}));
     }
   }, [])
 

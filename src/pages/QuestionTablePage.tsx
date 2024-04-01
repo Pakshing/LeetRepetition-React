@@ -27,7 +27,7 @@ const QuestionTablePage: React.FC = () => {
     if(localStorage.getItem("user_id") !== null && localStorage.getItem("user_id") !== undefined){
       dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)))
     }
-  }, [dispatch]);
+  }, [dispatch,localStorage.getItem("user_id")]);
 
   const columns: TableProps<LeetCodeQuestionModel>['columns'] = [
     {

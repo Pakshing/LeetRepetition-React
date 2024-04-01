@@ -5,7 +5,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 export const store = configureStore({
   reducer: {
-    user: userSlice.reducer,
+    userStore: userSlice.reducer,
     questionTableStore: questionTableSlice.reducer
     
   },

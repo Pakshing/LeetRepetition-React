@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { generate as randomStringGenerate } from 'randomstring';
+import { UserModel } from '../../../data/UserModel';
+import { log } from 'console';
 
 const backendHost = process.env.BACKEND_HOST || 'http://localhost:8080';
 
 interface UserState {
-    user: any;
+    user: UserModel | null;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
 }
@@ -16,16 +18,23 @@ const initialState: UserState = {
     error: null
 };
 
-export const createUser = createAsyncThunk('user/create', async (_, thunkAPI) => {
-    const user_email = randomStringGenerate(20) + "@localstorage.com";
+export const createUser = createAsyncThunk('user/', async ({email, loginMethod}:{email: string, loginMethod: string}, thunkAPI) => {
+    console.log("createUser", email)
+    console.log("createUser", loginMethod)
+    email = email ==="" ? randomStringGenerate(20) + "@localstorage.com":email;
+    loginMethod = loginMethod === "" ? "local":loginMethod;
+    console.log("createUser", email)
+    console.log("createUser", loginMethod)
     try {
         const response = await axios.post(backendHost + '/api/v1/users/add', {
-            email: user_email
+            email: email,
+            login_method: loginMethod
         });
-        if (response.status === 201) {
-            localStorage.setItem("user_email", user_email);
-            localStorage.setItem("user", JSON.stringify(response.data));
+        if (response.status >= 200) {
+            console.log(response.data)
+            localStorage.setItem("user_email", response.data.email);
             localStorage.setItem("user_id", response.data.id.toString());
+            localStorage.setItem("login_method", response.data.login_method);
             return response.data;
         } else {
             return thunkAPI.rejectWithValue('User creation failed');
@@ -45,6 +54,8 @@ export const getUser = createAsyncThunk('user/get', async (email: string, thunkA
         if (response.status === 200) {
             localStorage.setItem("user_email", response.data.email);
             localStorage.setItem("user_id", response.data.id.toString());
+            localStorage.setItem("login_method", response.data.login_method);
+            console.log(response.data)
             return response.data;
         } else {
             return thunkAPI.rejectWithValue('User fetch failed');
@@ -63,6 +74,7 @@ export const userSlice = createSlice({
                 state.status = 'loading';
             })
             builder.addCase(createUser.fulfilled, (state, action) => {
+                console.log("createUser fulfilled", action.payload)
                 state.status = 'succeeded';
                 state.user = action.payload;
             })
@@ -74,6 +86,7 @@ export const userSlice = createSlice({
                 state.status = 'loading';
             })
             builder.addCase(getUser.fulfilled, (state, action) => {
+                console.log("getUser fulfilled", action.payload)
                 state.status = 'succeeded';
                 state.user = action.payload;
             })
