@@ -1,8 +1,9 @@
 import React, { useState,useCallback } from 'react';
 import { Button, Modal } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import  { useAppDispatch } from '../../app/store';
 import {User} from '../../pages/User'
-import { createUser } from '../../store/features/user/UserSlice';
+import { createUser, getUser } from '../../store/features/user/UserSlice';
 import { getGithubUserEmail,fetchGoogleUserEmailByAccessToken } from '../../store/features/user/OauthUserApi';
 import {
   LoginSocialGoogle,
@@ -16,10 +17,11 @@ import {
 } from 'react-social-login-buttons'
 
 const LoginModal: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const REDIRECT_URI = 'http://localhost:3000/table';
+  const REDIRECT_URI = window.location.href;
 
 
   const showModal = () => {
@@ -44,10 +46,18 @@ const LoginModal: React.FC = () => {
     
   }
 
+  const onTestingUserAccount = () => {
+    dispatch(getUser(process.env.REACT_APP_TEST_USER_EMAIL||"testuser@local.com"))
+    .then(()=>{
+      navigate('/question');
+    })
+
+  }
+
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Login
+      <Button onClick={showModal}>
+        <b>Log In</b>
       </Button>
       <Modal
         open={open}
@@ -55,12 +65,12 @@ const LoginModal: React.FC = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
-          <Button type='primary' danger key="back" onClick={handleCancel}>
+          <Button danger key="back" onClick={handleCancel}>
             <b>Cancel</b>
           </Button>,
         ]}
       >
-        <div style={{display:"flex",justifyContent:"center",gap:"1rem"}}>
+      <div style={{display:"flex", flexDirection:"column", justifyContent:"center", gap:"1rem"}}>
         <LoginSocialGoogle
               isOnlyGetToken = {true}
               client_id={process.env.REACT_APP_GG_APP_ID || ''}
@@ -68,7 +78,10 @@ const LoginModal: React.FC = () => {
                 if(data){
                   const email = await fetchGoogleUserEmailByAccessToken(data.access_token);
                   if(email !== "Failure"){
-                    dispatch(createUser({email:email,loginMethod:"Google"}));
+                    dispatch(createUser({email:email,loginMethod:"Google"}))
+                    .then(()=>{
+                      navigate('/question');
+                    })
                   }
                 }
               }}
@@ -76,12 +89,22 @@ const LoginModal: React.FC = () => {
                 console.log(err)
               }}
             >
-              <Button size="large" style={{ backgroundColor: '#4285F4', color: '#FFFFFF' }}> <b>Google</b></Button>
+             <GoogleLoginButton/>
           </LoginSocialGoogle>
-
-              <Button  size="large" onClick={onLocalGenerateUser}>
+                <GithubLoginButton onClick={() => {
+                const clientId = process.env.REACT_APP_GITHUB_APP_ID || '';
+                const redirectUri = encodeURIComponent(REDIRECT_URI);
+                const scope = encodeURIComponent('user:email');
+                window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+            }}/>
+              {/* <Button  size="large" onClick={onLocalGenerateUser}>
                 <b>Generate Local Only User</b>
+              </Button> */}
+
+              <Button  size="large" onClick={onTestingUserAccount}>
+                <b>Log in as Testing User Account</b>
               </Button>
+
         </div>
        
       </Modal>

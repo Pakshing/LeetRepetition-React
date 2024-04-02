@@ -110,6 +110,10 @@ const QuestionTablePage: React.FC = () => {
       style={{
         padding: 24,
         minHeight: 360,
+        minWidth: '50%',
+        width:'80%',
+        
+        
       }}
     >
       <div style={{display:"flex",gap:"1rem", marginBottom:"1rem"}}>

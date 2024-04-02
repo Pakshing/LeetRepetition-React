@@ -65,6 +65,36 @@ export const getUser = createAsyncThunk('user/get', async (email: string, thunkA
     }
 });
 
+
+export const getGithubUserEmailAndUser = createAsyncThunk('user/getGithubUserEmailAndUser', async (code: string, thunkAPI) => {
+    try {
+        // Call the Spring Boot backend route to get the user email
+        const emailResponse = await axios.get(backendHost + '/github/oauth2/getUserEmail', {
+            params: {
+                code: code
+            }
+        });
+
+        if (emailResponse.status === 200) {
+            const email = emailResponse.data;
+            // Call getUser() with the email
+            const userResponse = await thunkAPI.dispatch(createUser({email: email, loginMethod: "GitHub"}));
+
+            if (userResponse.type === getUser.fulfilled.type) {
+                return userResponse.payload;
+            } else {
+                return thunkAPI.rejectWithValue('Failed to get user');
+            }
+        } else {
+            return thunkAPI.rejectWithValue('Failed to get GitHub user email');
+        }
+    } catch (error) {
+        return thunkAPI.rejectWithValue('Failed to get GitHub user email or user');
+    }
+});
+
+
+
 export const userSlice = createSlice({
     name: 'user',
     initialState,

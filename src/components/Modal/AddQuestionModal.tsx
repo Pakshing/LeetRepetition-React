@@ -95,6 +95,7 @@ const AddQuestionModal: React.FC = () => {
             <Radio.Button value="ARRAY">Array</Radio.Button>
             <Radio.Button value="STRING">String</Radio.Button>
             <Radio.Button value="LINKED_LIST">Linked List</Radio.Button>
+            <Radio.Button value="RECURSION">Recursion</Radio.Button>
             <Radio.Button value="HASHING">Map/Set</Radio.Button>
             <Radio.Button value="BINARY_SEARCH">Binary Search</Radio.Button>
             <Radio.Button value="HEAP">Heap/Priority Queue</Radio.Button>
@@ -107,7 +108,7 @@ const AddQuestionModal: React.FC = () => {
             <Radio.Button value="SORTING">Sorting</Radio.Button>
             <Radio.Button value="BACKTRACKING">Backtracking</Radio.Button>
             <Radio.Button value="INTERVALS">Intervals</Radio.Button>
-            <Radio.Button value="MATH&GEOMEYRT">Math & Geometry</Radio.Button>
+            <Radio.Button value="MATH&GEOMETRY">Math & Geometry</Radio.Button>
             <Radio.Button value="BIT_MANIPULATION">Bit Manipulation</Radio.Button>
             </Radio.Group>
         </Form.Item>

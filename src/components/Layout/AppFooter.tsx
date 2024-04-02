@@ -5,7 +5,7 @@ const { Footer } = Layout;
 function AppFooter() {
   return (
     <Footer style={{ textAlign: 'center' }}>
-          LeetCode Repetition ©{new Date().getFullYear()} Created by Pak Shing Kan
+          Leetcode Scheduler ©{new Date().getFullYear()} Created by Pak Shing Kan
     </Footer>
    
   )

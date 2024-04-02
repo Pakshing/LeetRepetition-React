@@ -17,50 +17,51 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AppHeader from './components/Layout/AppHeader';
 import AppFooter from './components/Layout/AppFooter';
 import { useAppSelector, useAppDispatch } from './app/store'
-import { getUser,createUser } from './store/features/user/UserSlice';
+import { getUser,createUser, getGithubUserEmailAndUser} from './store/features/user/UserSlice';
 
 
 
-const { Content, Footer, Sider } = Layout;
+const { Content } = Layout;
 
 
 
 function App() {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.userStore.user);
-  const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-
-
-
   useEffect(() => {
-    if(localStorage.getItem("user_email") === null || localStorage.getItem("user_id") === null){
-      //dispatch(createUser({email:"",loginMethod:""}));
+    const query = new URLSearchParams(window.location.search);
+    const code = query.get('code');
+    if(code){
+      console.log("code",code)
+      dispatch(getGithubUserEmailAndUser(code))
     }
   }, [])
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <AppHeader/>
-        <Router>
+      <Router>
+        <AppHeader/>
+        
           <Content style={{ margin: '16px 16px' }}>
             <div
               style={{
+                display: "flex",
+                justifyContent: "center",
                 padding: 24,
-                minHeight: "90vh",
+                minHeight: "85vh",
                 background: colorBgContainer,
                 borderRadius: borderRadiusLG,
-                backgroundColor: "#c8cace",
-
+                backgroundColor: "#ebebeb",
+               
               }}
             >
               
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/table" element={<QuestionTable />} />
+                  <Route path="/question" element={<QuestionTable />} />
                 </Routes>
             </div>
           </Content>
