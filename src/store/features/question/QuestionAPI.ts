@@ -68,7 +68,7 @@ export async function addNewQuestion(question:LeetCodeQuestionModel, review_in_d
         url: question.url,
         title: question.title,
         difficulty: question.difficulty,
-        category: question.category,
+        tags: question.tags,
         next_review_long: review_in,
         owner_id: question.owner_id
       });
@@ -114,7 +114,7 @@ export async function editQuestion(question:LeetCodeQuestionModel) {
           url: question.url,
           title: question.title,
           difficulty: question.difficulty,
-          category: question.category,
+          tags: question.tags,
           next_review_long: question.next_review_long,
           owner_id: question.owner_id,
         });

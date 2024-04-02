@@ -58,13 +58,18 @@ const QuestionTablePage: React.FC = () => {
       render: (isoString:string) => <span>{ get_next_review_string(isoString) }</span>,
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-      render: (tag) => 
-      <Tag color={tagColors(tag)} key={tag}>
-      {tag.replace(/_/g, ' ').toUpperCase()}
-    </Tag>,
+        title: 'Tags',
+        dataIndex: 'tags',
+        key: 'tags',
+        render: (tags) => (
+            <>
+                {tags.map((tag:string) => (
+                    <Tag color={tagColors(tag)} key={tag}>
+                        {tag.replace(/_/g, ' ').toUpperCase()}
+                    </Tag>
+                ))}
+            </>
+        ),
     },
     {
       title: 'Action',

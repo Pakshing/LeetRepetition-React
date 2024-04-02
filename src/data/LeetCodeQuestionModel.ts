@@ -2,7 +2,7 @@ export interface LeetCodeQuestionModel {
     id: number;
     title: string;
     url: string;
-    category: string;
+    //category: string;
     owner_id: number;
     tags: string[];
     date_created: Date;

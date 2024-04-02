@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, Select, Space, Radio, Tag } from 'antd';
+import { Button, Modal, Form, Input, Select, Space, Radio, Tag, Checkbox } from 'antd';
 import { addNewQuestion } from '../../store/features/question/QuestionAPI';
 import { useAppDispatch } from '../../app/store';
 import { findQuestionByUserId} from '../../store/features/questionTable/questionTableSlice'
@@ -29,6 +29,7 @@ const AddQuestionModal: React.FC = () => {
     form
       .validateFields()
       .then(async (values) => {
+        console.log(values);
         const result = await addNewQuestion(values,values.review_in_days_str);
         if (result !== 'Failure') {
             dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));
@@ -90,28 +91,32 @@ const AddQuestionModal: React.FC = () => {
             </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select a category!' }]}>
-            <Radio.Group>
-            <Radio.Button value="ARRAY">Array</Radio.Button>
-            <Radio.Button value="STRING">String</Radio.Button>
-            <Radio.Button value="LINKED_LIST">Linked List</Radio.Button>
-            <Radio.Button value="RECURSION">Recursion</Radio.Button>
-            <Radio.Button value="HASHING">Map/Set</Radio.Button>
-            <Radio.Button value="BINARY_SEARCH">Binary Search</Radio.Button>
-            <Radio.Button value="HEAP">Heap/Priority Queue</Radio.Button>
-            <Radio.Button value="SLIDING_WINDOW">Sliding Window</Radio.Button>
-            <Radio.Button value="STACK&QUEUE">Stack/Queue</Radio.Button>
-            <Radio.Button value="TREE">Tree</Radio.Button>
-            <Radio.Button value="GRAPH">Graph</Radio.Button>
-            <Radio.Button value="DP">Dynamic Programming</Radio.Button>
-            <Radio.Button value="GREEDY">Greedy</Radio.Button>
-            <Radio.Button value="SORTING">Sorting</Radio.Button>
-            <Radio.Button value="BACKTRACKING">Backtracking</Radio.Button>
-            <Radio.Button value="INTERVALS">Intervals</Radio.Button>
-            <Radio.Button value="MATH&GEOMETRY">Math & Geometry</Radio.Button>
-            <Radio.Button value="BIT_MANIPULATION">Bit Manipulation</Radio.Button>
-            </Radio.Group>
-        </Form.Item>
+        <Form.Item 
+    label="Tags" 
+    name="tags" 
+    rules={[{ required: true, message: 'Please select at least one category!' }]}
+>
+    <Checkbox.Group>
+        <Checkbox value="Array">Array</Checkbox>
+        <Checkbox value="String">String</Checkbox>
+        <Checkbox value="Linked List">Linked List</Checkbox>
+        <Checkbox value="Recursion">Recursion</Checkbox>
+        <Checkbox value="Map/Set">Map/Set</Checkbox>
+        <Checkbox value="Binary Search">Binary Search</Checkbox>
+        <Checkbox value="Heap/Priority Queue">Heap/Priority Queue</Checkbox>
+        <Checkbox value="Sliding Window">Sliding Window</Checkbox>
+        <Checkbox value="Stack/Queue">Stack/Queue</Checkbox>
+        <Checkbox value="Tree">Tree</Checkbox>
+        <Checkbox value="Graph">Graph</Checkbox>
+        <Checkbox value="Dynamic Programming">Dynamic Programming</Checkbox>
+        <Checkbox value="Greedy">Greedy</Checkbox>
+        <Checkbox value="Sorting">Sorting</Checkbox>
+        <Checkbox value="Backtracking">Backtracking</Checkbox>
+        <Checkbox value="Intervals">Intervals</Checkbox>
+        <Checkbox value="MATH&Math & Geometry">Math & Geometry</Checkbox>
+        <Checkbox value="Bit Manipulation">Bit Manipulation</Checkbox>
+    </Checkbox.Group>
+</Form.Item>
         <Form.Item label="Next Review Date" name="review_in_days_str" rules={[{ required: true, message: 'Please select an option!' }]}>
             <Radio.Group>
             <Radio.Button value="1">Tomorrow</Radio.Button>

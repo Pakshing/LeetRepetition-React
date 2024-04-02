@@ -1,19 +1,24 @@
 // create a function that takes a string, category (like leetcode different tags) and returns a color
 
 export const tagColors = (tag: string) => {
-    if(tag.toUpperCase() === 'ARRAY') return 'geekblue';
-    if(tag.toUpperCase() === 'STRING') return 'green';
-    if(tag.toUpperCase() === 'LINKED_LIST') return 'volcano';
-    if(tag.toUpperCase() === 'HASHING') return 'orange';
-    if(tag.toUpperCase() === 'HEAP') return 'gold';
-    if(tag.toUpperCase() === 'SLIDING_WINDOW') return 'cyan';
-    if(tag.toUpperCase() === 'STACK&QUEUE') return 'purple';
-    if(tag.toUpperCase() === 'TREE') return 'magenta';
-    if(tag.toUpperCase() === 'GRAPH') return 'lime';
-    if(tag.toUpperCase() === 'DP') return 'blue';
-    if(tag.toUpperCase() === 'GREEDY') return 'red';
-    if(tag.toUpperCase() === 'SORTING') return 'yellow';
-    if(tag.toUpperCase() === 'BACKTRACKING') return 'gold';
+    if(tag === 'Array') return 'geekblue';
+    if(tag === 'String') return 'green';
+    if(tag === 'Linked List') return 'volcano';
+    if(tag === 'Recursion') return 'orange';
+    if(tag === 'Map/Set') return 'gold';
+    if(tag === 'Binary Search') return 'cyan';
+    if(tag === 'Heap/Priority Queue') return 'purple';
+    if(tag === 'Sliding Window') return 'magenta';
+    if(tag === 'Stack/Queue') return 'lime';
+    if(tag === 'Tree') return 'blue';
+    if(tag === 'Graph') return 'gray';
+    if(tag === 'Dynamic Programming') return 'yellow';
+    if(tag === 'Greedy') return 'red';
+    if(tag === 'Sorting') return 'pink';
+    if(tag === 'Backtracking') return 'teal';
+    if(tag === 'Intervals') return 'cornflowerblue';
+    if(tag === 'MATH&Math & Geometry') return 'darkcyan';
+    if(tag === 'Bit Manipulation') return 'brown';
 
     return 'geekblue';
 };
