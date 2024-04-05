@@ -32,12 +32,7 @@ function App() {
   } = theme.useToken();
 
   useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    const code = query.get('code');
-    if(code){
-      console.log("code",code)
-      dispatch(getGithubUserEmailAndUser(code))
-    }
+
   }, [])
 
   return (
@@ -51,7 +46,6 @@ function App() {
                 display: "flex",
                 justifyContent: "center",
                 padding: 24,
-                minHeight: "85vh",
                 background: colorBgContainer,
                 borderRadius: borderRadiusLG,
                 backgroundColor: "#ebebeb",

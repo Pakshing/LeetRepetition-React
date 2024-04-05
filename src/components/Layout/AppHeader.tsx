@@ -30,7 +30,7 @@ function AppHeader() {
   const items = [
     {
       key: 1,
-      label: <Link to="/question"> <b> Question</b></Link>,
+      label: <Link to="/question"> <b style={{color:'white'}}> Question</b></Link>,
   }];
   
   const {
@@ -63,22 +63,25 @@ function AppHeader() {
   }
 
   return (
-    <Header style={{ display: "flex", justifyContent: 'space-between', alignItems: "center" }}>
+    <Header style={{ display: "flex", justifyContent: 'space-between', alignItems: "center", backgroundColor:'#1A1F2B' }}>
       <a href="/" style={{ color: "white" }}>
 
           <b style={{ color: "white", fontSize: "1.5rem" }}>
             <ClockCircleOutlined style={{marginRight:"1rem"}}/> Leetcode Scheduler
+
           </b>
+          
+          
       </a>
+          
           {localStorage.getItem("user_email") && localStorage.getItem("user_id") ? 
           <Menu
-          theme="dark"
           mode="horizontal"
           defaultSelectedKeys={['2']}
           items={items}
-          style={{ flex: 1, minWidth: 0, marginLeft:"1rem" }}
+          style={{ flex: 1, minWidth: 0, marginLeft:"1rem", backgroundColor:'#1A1F2B'}}
         /> : null}
-          
+          <span style={{marginRight:'1rem', color:'white'}}>Beta</span>
           {localStorage.getItem("user_email") && localStorage.getItem("user_id") ?  <Button onClick={logoutOnClick}>
         <b>Log Out</b>
       </Button>: <LoginModal /> }

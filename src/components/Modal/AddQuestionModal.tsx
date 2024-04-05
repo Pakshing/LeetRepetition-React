@@ -94,7 +94,7 @@ const AddQuestionModal: React.FC = () => {
         <Form.Item 
     label="Tags" 
     name="tags" 
-    rules={[{ required: true, message: 'Please select at least one category!' }]}
+    rules={[{ required: false, message: 'Please select at least one category!' }]}
 >
     <Checkbox.Group>
         <Checkbox value="Array">Array</Checkbox>

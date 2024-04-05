@@ -129,7 +129,8 @@ const QuestionTablePage: React.FC = () => {
         >
           {filterActive ? 'All Questions' : 'Show Due'}
         </Button>
-        <AddQuestionModal/>
+        {localStorage.getItem("user_id") !== null && localStorage.getItem("user_id") !== undefined && <AddQuestionModal/>}
+       
       </div>
       
       <Table
