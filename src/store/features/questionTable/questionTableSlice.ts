@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from 'axios';
 
 
-const backendHost = process.env.BACKEND_HOST || 'http://localhost:8080';
+const backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
 
 // Define the initial state interface
 interface QuestionTableState {

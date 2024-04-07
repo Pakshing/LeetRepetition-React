@@ -4,7 +4,7 @@ import { generate as randomStringGenerate } from 'randomstring';
 import { UserModel } from '../../../data/UserModel';
 import { log } from 'console';
 
-const backendHost = process.env.BACKEND_HOST || 'http://localhost:8080';
+const backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
 
 interface UserState {
     user: UserModel | null;

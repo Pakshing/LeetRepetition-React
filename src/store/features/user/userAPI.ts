@@ -2,7 +2,7 @@ import axios from 'axios';
 import { generate as randomStringGenerate} from 'randomstring'
 
 
-const backendHost = process.env.BACKEND_HOST || 'http://localhost:8080';
+const backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
 
 export async function createUser() {
     const user_email = randomStringGenerate(20)+"@localstorage.com";

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { LeetCodeQuestionModel } from '../../../data/LeetCodeQuestionModel';
 
 
-const backendHost = process.env.BACKEND_HOST || 'http://localhost:8080';
+const backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
 
 
 
