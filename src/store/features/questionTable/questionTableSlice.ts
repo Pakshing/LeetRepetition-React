@@ -29,7 +29,7 @@ const initialState: QuestionTableState = {
 export const findQuestionByUserId = createAsyncThunk(
   'questions/find',
   async (owner_id: number, thunkAPI) => {
-    const response = await axios.get('http://localhost:8080/api/v1/questions/find', {
+    const response = await axios.get(backendHost+'/api/v1/questions/find', {
       params: {
         owner_id: owner_id
       }
