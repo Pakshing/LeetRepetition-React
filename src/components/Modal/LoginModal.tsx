@@ -21,7 +21,7 @@ const LoginModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const REDIRECT_URI = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:3000';
+  const REDIRECT_URI = process.env.REACT_APP_GITHUB_REDIRECT_URI || 'http://localhost:3000';
 
 
   const showModal = () => {
