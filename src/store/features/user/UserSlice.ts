@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { generate as randomStringGenerate } from 'randomstring';
 import { UserModel } from '../../../data/UserModel';
-import { log } from 'console';
 
 const backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
+
 
 interface UserState {
     user: UserModel | null;
@@ -17,6 +18,27 @@ const initialState: UserState = {
     status: 'idle',
     error: null
 };
+
+
+
+// export const githubLogin = async (code: string) => {
+//     try {
+//         const response = await axios.post(backendHost + '/api/v1/oauth2/github/authenticate', code);
+//         if (response.status === 200) {
+//             Cookies.set('token', response.data.token);
+//             console.log(response.data.message); 
+//             return response.data.redirectUrl;
+//         } else {
+//             console.error('Authentication failed');
+//         }
+//     } catch (error) {
+//         console.error('Error:', error);
+//     }
+// }
+
+
+
+
 
 export const createUser = createAsyncThunk('user/', async ({email, loginMethod}:{email: string, loginMethod: string}, thunkAPI) => {
     console.log("createUser", email)
@@ -44,6 +66,8 @@ export const createUser = createAsyncThunk('user/', async ({email, loginMethod}:
     }
 });
 
+
+
 export const getUser = createAsyncThunk('user/get', async (email: string, thunkAPI) => {
     try {
         const response = await axios.get(backendHost + '/api/v1/users/find', {
@@ -66,13 +90,12 @@ export const getUser = createAsyncThunk('user/get', async (email: string, thunkA
 });
 
 
+
 export const getGithubUserEmailAndUser = createAsyncThunk('user/getGithubUserEmailAndUser', async (code: string, thunkAPI) => {
     try {
         // Call the Spring Boot backend route to get the user email
-        const emailResponse = await axios.get(backendHost + '/github/oauth2/getUserEmail', {
-            params: {
-                code: code
-            }
+        const emailResponse = await axios.post(backendHost + '/github/oauth2/getUserEmail', {
+            code:code
         });
 
         if (emailResponse.status === 200) {

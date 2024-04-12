@@ -1,30 +1,38 @@
 import React,{useEffect} from 'react'
-import { useAppDispatch } from '../../app/store';
+import { useAppDispatch, useAppSelector } from '../../app/store';
 import { getGithubUserEmailAndUser } from '../../store/features/user/UserSlice';
+import { githubLogin } from '../../store/features/token/tokenSlice';
 import { Breadcrumb, Button, Layout, Menu, theme } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginButton from '../Button/LoginButton'
 import LoginModal from '../Modal/LoginModal';
 import { ClockCircleOutlined } from '@ant-design/icons';
+import Cookies from 'js-cookie';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 function AppHeader() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.tokenStore.token);
 
   useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    const code = query.get('code');
-    if(code){
-      console.log("code",code)
-      dispatch(getGithubUserEmailAndUser(code))
-      .then(()=>{
-        navigate('/question');
-      }
-      )
+    console.log("token",token)
+    const fetchGithubUser = async () => {
+        const query = new URLSearchParams(window.location.search);
+        const code = query.get('code');
+        if(code){
+          dispatch(githubLogin(code)).then((action) => {
+            if (githubLogin.fulfilled.match(action)) {
+                navigate('/question');
+            }
+        });
+            
+        }
     }
-  }, [])
+
+    fetchGithubUser();
+}, []);
 
 
   const items = [
