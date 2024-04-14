@@ -21,7 +21,8 @@ const LoginModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const REDIRECT_URI = process.env.REACT_APP_GITHUB_REDIRECT_URI || 'http://localhost:3000';
+  const GITHUB_REDIRECT_URI = process.env.REACT_APP_GITHUB_REDIRECT_URI || 'http://localhost:3000';
+  const GOOGLE_REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI || 'http://localhost:3000';
 
 
   const showModal = () => {
@@ -43,8 +44,17 @@ const LoginModal: React.FC = () => {
   const onLocalGenerateUser = () => {
     const userConfirmed = window.confirm("This is a one time only local account, no data will be reserved after logout. Are you sure you want to proceed?");
     if(userConfirmed) dispatch(createUser({email:"",loginMethod:"Local"}));
-    
   }
+
+const redirectToGoogleOAuth = () => {
+    const clientId = process.env.REACT_APP_GG_APP_ID; // Replace with your client ID
+    const redirectUri = encodeURIComponent(GOOGLE_REDIRECT_URI); // Replace with your redirect URI
+    const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.email');
+    const responseType = 'code';
+    const googleState = 'google';
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&state=${googleState}`;
+    window.location.href = url;
+}
 
   const onTestingUserAccount = () => {
     dispatch(getUser(process.env.REACT_APP_TEST_USER_EMAIL||"testuser@local.com"))
@@ -71,8 +81,8 @@ const LoginModal: React.FC = () => {
         ]}
       >
       <div style={{display:"flex", flexDirection:"column", justifyContent:"center", gap:"1rem"}}>
-        <LoginSocialGoogle
-              isOnlyGetToken = {true}
+        {/* <LoginSocialGoogle
+              typeResponse = {'idToken'}
               client_id={process.env.REACT_APP_GG_APP_ID || ''}
               onResolve={async ({ provider, data }: IResolveParams) => {
                 if(data){
@@ -88,14 +98,18 @@ const LoginModal: React.FC = () => {
               onReject={(err) => {
                 console.log(err)
               }}
-            >
-             <GoogleLoginButton/>
-          </LoginSocialGoogle>
+            > */}
+             <GoogleLoginButton 
+             onClick={redirectToGoogleOAuth}
+             />
+          {/* </LoginSocialGoogle> */}
                 <GithubLoginButton onClick={() => {
                 const clientId = process.env.REACT_APP_GITHUB_APP_ID || '';
-                const redirectUri = encodeURIComponent(REDIRECT_URI);
+                const redirectUri = encodeURIComponent(GITHUB_REDIRECT_URI);
                 const scope = encodeURIComponent('user:email');
-                window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+                const githubState = 'github';
+                const githubUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${githubState}`;
+                window.location.href = githubUrl;
             }}/>
               {/* <Button  size="large" onClick={onLocalGenerateUser}>
                 <b>Generate Local Only User</b>

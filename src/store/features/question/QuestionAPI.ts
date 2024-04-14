@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { LeetCodeQuestionModel } from '../../../data/LeetCodeQuestionModel';
+import Cookies from 'js-cookie';
 
 
 const backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
@@ -70,7 +71,11 @@ export async function addNewQuestion(question:LeetCodeQuestionModel, review_in_d
         difficulty: question.difficulty,
         tags: question.tags,
         next_review_long: review_in,
-        owner_id: question.owner_id
+      },{
+        headers: {
+          'Authorization': `Bearer ${Cookies.get("token")}`
+        }
+      
       });
       if (response.status === 201) {
         console.log('question created successfully');

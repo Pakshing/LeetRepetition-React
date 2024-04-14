@@ -38,6 +38,23 @@ export const githubLogin = createAsyncThunk<GithubLoginResponse, string>('token/
         return thunkAPI.rejectWithValue('An error occurred');
     }
 });
+
+export const googleLogin = createAsyncThunk<GithubLoginResponse, string>('token/googleLogin', async (code, thunkAPI) => {
+    try {
+        const response = await axios.post(backendHost + '/api/v1/oauth2/google/authenticate', code);
+        if (response.status === 200) {
+            Cookies.set('token', response.data.token);
+            console.log(response.data.message); 
+            return response.data;
+        } else {
+            console.error('Authentication failed');
+            return thunkAPI.rejectWithValue('Authentication failed');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return thunkAPI.rejectWithValue('An error occurred');
+    }
+});
 // Token slice
 export const tokenSlice = createSlice({
     name: 'token',
@@ -47,13 +64,16 @@ export const tokenSlice = createSlice({
         builder
             .addCase(githubLogin.fulfilled, (state, action: PayloadAction<GithubLoginResponse>) => {
                 state.token = action.payload.token;
-                console.log("token fulfilled",state.token)
+                Cookies.set('token', action.payload.token);
+                Cookies.set('loggedIn', 'true');
             })
             .addCase(githubLogin.pending, (state) => {
                 state.status = 'loading';
             })
             .addCase(githubLogin.rejected, (state, action) => {
                 state.status = 'failed';
+                Cookies.remove('token');
+                Cookies.set('loggedIn', 'false');
                 state.error = action.payload as string;
             });
     }

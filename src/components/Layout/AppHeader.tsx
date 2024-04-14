@@ -1,9 +1,9 @@
 import React,{useEffect} from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import { getGithubUserEmailAndUser } from '../../store/features/user/UserSlice';
-import { githubLogin } from '../../store/features/token/tokenSlice';
+import { githubLogin,googleLogin } from '../../store/features/token/tokenSlice';
 import { Breadcrumb, Button, Layout, Menu, theme } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LoginButton from '../Button/LoginButton'
 import LoginModal from '../Modal/LoginModal';
 import { ClockCircleOutlined } from '@ant-design/icons';
@@ -14,25 +14,33 @@ const { Header, Content, Footer, Sider } = Layout;
 function AppHeader() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const location = useLocation()
   const token = useAppSelector((state) => state.tokenStore.token);
 
-  useEffect(() => {
-    console.log("token",token)
-    const fetchGithubUser = async () => {
+useEffect(() => {
+    const fetchUser = async () => {
         const query = new URLSearchParams(window.location.search);
         const code = query.get('code');
-        if(code){
-          dispatch(githubLogin(code)).then((action) => {
-            if (githubLogin.fulfilled.match(action)) {
-                navigate('/question');
-            }
-        });
-            
+        const state = query.get('state');
+  
+        if (state === 'google' && code) {
+            dispatch(googleLogin(code)).then((action) => {
+                if (googleLogin.fulfilled.match(action)) {
+                    navigate('/question');
+                }
+            });
+        } else if (state === 'github' && code) {
+            dispatch(githubLogin(code)).then((action) => {
+                if (githubLogin.fulfilled.match(action)) {
+                    navigate('/question');
+                }
+            });
         }
+        
     }
 
-    fetchGithubUser();
-}, []);
+    fetchUser();
+}, [location]);
 
 
   const items = [
@@ -49,25 +57,13 @@ function AppHeader() {
   
 
   const logoutOnClick = () => {  
-    let userConfirmed = false;
-    if(localStorage.getItem("login_method") === "Local"){
-      userConfirmed = window.confirm("Once you logout from local only user account, you will lose all your data. Are you sure you want to logout?");
-    }else{
-      userConfirmed = window.confirm("Are you sure you want to logout?");
-    }
-    if (userConfirmed) {
-
-      localStorage.removeItem("user_email");
-      localStorage.removeItem("user_id");
-      localStorage.removeItem("login_method");
+      Cookies.remove('token');
+      Cookies.set('loggedIn', 'false');
       navigate('/');
       // Remove all URL parameters
       const urlWithoutParameters = window.location.protocol + "//" + window.location.host + window.location.pathname;
       window.history.pushState({}, document.title, urlWithoutParameters);
       window.location.reload();
-    
-
-    }
   }
 
   return (
@@ -82,7 +78,7 @@ function AppHeader() {
           
       </a>
           
-          {localStorage.getItem("user_email") && localStorage.getItem("user_id") ? 
+          {Cookies.get('loggedIn') === "true" ? 
           <Menu
           mode="horizontal"
           defaultSelectedKeys={['2']}
@@ -90,7 +86,7 @@ function AppHeader() {
           style={{ flex: 1, minWidth: 0, marginLeft:"1rem", backgroundColor:'#1A1F2B'}}
         /> : null}
           <span style={{marginRight:'1rem', color:'white'}}>Beta</span>
-          {localStorage.getItem("user_email") && localStorage.getItem("user_id") ?  <Button onClick={logoutOnClick}>
+          {Cookies.get("loggedIn") === "true"?  <Button onClick={logoutOnClick}>
         <b>Log Out</b>
       </Button>: <LoginModal /> }
           

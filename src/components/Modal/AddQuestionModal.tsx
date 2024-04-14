@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, Space, Radio, Tag, Checkbox } from 'antd';
 import { addNewQuestion } from '../../store/features/question/QuestionAPI';
 import { useAppDispatch } from '../../app/store';
-import { findQuestionByUserId} from '../../store/features/questionTable/questionTableSlice'
+import { fetchQuestions} from '../../store/features/questionTable/questionTableSlice'
 
 
 const layout = {
@@ -32,7 +32,7 @@ const AddQuestionModal: React.FC = () => {
         console.log(values);
         const result = await addNewQuestion(values,values.review_in_days_str);
         if (result !== 'Failure') {
-            dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));
+            dispatch(fetchQuestions());
             setVisible(false);
             form.resetFields();
           }

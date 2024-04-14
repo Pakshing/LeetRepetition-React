@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Form, Radio } from 'antd';
 import {QuestionState, updateQuestion, get_next_review_long} from '../../store/features/question/QuestionAPI';
 import { useAppDispatch } from '../../app/store';
-import { findQuestionByUserId} from '../../store/features/questionTable/questionTableSlice'
+import { fetchQuestions} from '../../store/features/questionTable/questionTableSlice'
 import { LeetCodeQuestionModel } from '../../data/LeetCodeQuestionModel';
 
 
@@ -28,7 +28,7 @@ type UpdateReviewDateModalProps = {
         modifiedQuestion.next_review_long = review_in_long ? Number(review_in_long) : null;
         const result = await updateQuestion(modifiedQuestion);
         if (result !== 'Failure') {
-            dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));
+            dispatch(fetchQuestions());
           }
         form.resetFields()
         setIsModalVisible(false);

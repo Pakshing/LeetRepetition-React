@@ -3,13 +3,13 @@ import { Button, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import {tagColors,difficultyColors} from '../utils/TableItemColors'
 import { useAppDispatch, useAppSelector } from '../app/store';
-import { findQuestionByUserId } from '../store/features/questionTable/questionTableSlice';
+import { fetchQuestions } from '../store/features/questionTable/questionTableSlice';
 import { LeetCodeQuestionModel } from '../data/LeetCodeQuestionModel';
 import AddQuestionModal from '../components/Modal/AddQuestionModal';
 import { get_next_review_string, deleteQuestion } from '../store/features/question/QuestionAPI'; 
 import UpdateReviewDateModal from '../components/Modal/UpdateReviewDateModal';
 import EditQuestionModal from '../components/Modal/EditQuestionModal';
-
+import Cookies from 'js-cookie';
 
 
 
@@ -24,10 +24,10 @@ const QuestionTablePage: React.FC = () => {
   const [filterActive, setFilterActive] = useState(false);
 
   useEffect(() => {
-    if(localStorage.getItem("user_id") !== null && localStorage.getItem("user_id") !== undefined){
-      dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)))
+    if(Cookies.get("loggedIn") === "true"){
+      dispatch(fetchQuestions())
     }
-  }, [dispatch,localStorage.getItem("user_id")]);
+  }, [dispatch,Cookies.get('loggedIn')]);
 
   const columns: TableProps<LeetCodeQuestionModel>['columns'] = [
     {
@@ -90,7 +90,7 @@ const QuestionTablePage: React.FC = () => {
       try {
         const result = await deleteQuestion(id);
         if (result !== 'Failure') {
-          dispatch(findQuestionByUserId(parseInt(localStorage.getItem("user_id") as string)));
+          dispatch(fetchQuestions());
         } else {
           alert('Question deletion failed');
         }
@@ -129,7 +129,7 @@ const QuestionTablePage: React.FC = () => {
         >
           {filterActive ? 'All Questions' : 'Show Due'}
         </Button>
-        {localStorage.getItem("user_id") !== null && localStorage.getItem("user_id") !== undefined && <AddQuestionModal/>}
+        {Cookies.get("token") !== null && <AddQuestionModal/>}
        
       </div>
       

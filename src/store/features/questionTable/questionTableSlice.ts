@@ -1,6 +1,7 @@
 import { LeetCodeQuestionModel } from '../../../data/LeetCodeQuestionModel';
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 
 const backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
@@ -26,19 +27,19 @@ const initialState: QuestionTableState = {
 
 };
 
-export const findQuestionByUserId = createAsyncThunk(
+export const fetchQuestions = createAsyncThunk(
   'questions/find',
-  async (owner_id: number, thunkAPI) => {
+  async (thunkAPI) => {
+    const token = Cookies.get('token');
     const response = await axios.get(backendHost+'/api/v1/questions/find', {
-      params: {
-        owner_id: owner_id
+      headers: {
+        Authorization: `Bearer ${token}`
       }
     });
     console.log(response.data)
     return response.data;
   }
 );
-
 
 // Create the slice
 export const questionTableSlice = createSlice({
@@ -48,14 +49,14 @@ export const questionTableSlice = createSlice({
       
     },
     extraReducers: (builder) => {
-        builder.addCase(findQuestionByUserId.pending, (state) => {
+        builder.addCase(fetchQuestions.pending, (state) => {
           state.loading = "pending";
         });
-        builder.addCase(findQuestionByUserId.fulfilled, (state, action) => {
+        builder.addCase(fetchQuestions.fulfilled, (state, action) => {
           state.loading = "succeeded";
           state.questions = action.payload;
         });
-        builder.addCase(findQuestionByUserId.rejected, (state, action) => {
+        builder.addCase(fetchQuestions.rejected, (state, action) => {
           state.loading = "failed";
           state.questions = [];
           state.error = action.payload as string;
