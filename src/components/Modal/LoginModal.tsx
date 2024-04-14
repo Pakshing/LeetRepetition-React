@@ -103,14 +103,14 @@ const redirectToGoogleOAuth = () => {
              onClick={redirectToGoogleOAuth}
              />
           {/* </LoginSocialGoogle> */}
-                <GithubLoginButton onClick={() => {
+                {/* <GithubLoginButton onClick={() => {
                 const clientId = process.env.REACT_APP_GITHUB_APP_ID || '';
                 const redirectUri = encodeURIComponent(GITHUB_REDIRECT_URI);
                 const scope = encodeURIComponent('user:email');
                 const githubState = 'github';
                 const githubUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${githubState}`;
                 window.location.href = githubUrl;
-            }}/>
+            }}/> */}
               {/* <Button  size="large" onClick={onLocalGenerateUser}>
                 <b>Generate Local Only User</b>
               </Button> */}
