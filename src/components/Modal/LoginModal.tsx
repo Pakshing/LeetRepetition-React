@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import  { useAppDispatch } from '../../app/store';
 import {User} from '../../pages/User'
 import { createUser, getUser } from '../../store/features/user/UserSlice';
+import { testUserLogin } from '../../store/features/token/tokenSlice';
 import { getGithubUserEmail,fetchGoogleUserEmailByAccessToken } from '../../store/features/user/OauthUserApi';
 import {
   LoginSocialGoogle,
@@ -57,7 +58,7 @@ const redirectToGoogleOAuth = () => {
 }
 
   const onTestingUserAccount = () => {
-    dispatch(getUser(process.env.REACT_APP_TEST_USER_EMAIL||"testuser@local.com"))
+    dispatch(testUserLogin(process.env.REACT_APP_TEST_USER_EMAIL||"testuser@local.com"))
     .then(()=>{
       navigate('/question');
     })

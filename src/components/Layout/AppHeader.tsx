@@ -8,6 +8,7 @@ import LoginButton from '../Button/LoginButton'
 import LoginModal from '../Modal/LoginModal';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 const { Header, Content, Footer, Sider } = Layout;
 

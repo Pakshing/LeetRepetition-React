@@ -98,6 +98,11 @@ export async function updateQuestion(question:LeetCodeQuestionModel) {
         const response = await axios.put(backendHost+`/api/v1/questions/update/${question.id}`, {
             next_review_long: question.next_review_long,
             owner_id: question.owner_id,
+          },{
+            headers: {
+              'Authorization': `Bearer ${Cookies.get("token")}`
+            }
+          
           });
 
         if (response.status === 200) {
@@ -122,6 +127,11 @@ export async function editQuestion(question:LeetCodeQuestionModel) {
           tags: question.tags,
           next_review_long: question.next_review_long,
           owner_id: question.owner_id,
+        },{
+          headers: {
+            'Authorization': `Bearer ${Cookies.get("token")}`
+          }
+        
         });
 
       if (response.status === 200) {
@@ -138,7 +148,12 @@ export async function editQuestion(question:LeetCodeQuestionModel) {
 }
 export async function deleteQuestion(id:number) {
     try {
-        const response = await axios.delete(backendHost+`/api/v1/questions/${id}`);
+        const response = await axios.delete(backendHost+`/api/v1/questions/${id}`,{
+          headers: {
+            'Authorization': `Bearer ${Cookies.get("token")}`
+          }
+        
+        });
         if (response.status === 200) {
             console.log('Question deleted successfully');
             return response.data;

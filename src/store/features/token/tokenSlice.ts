@@ -25,7 +25,7 @@ interface GithubLoginResponse {
 export const githubLogin = createAsyncThunk<GithubLoginResponse, string>('token/githubLogin', async (code, thunkAPI) => {
     try {
         const response = await axios.post(backendHost + '/api/v1/oauth2/github/authenticate', code);
-        if (response.status === 200) {
+        if (response.status === 200) {    
             Cookies.set('token', response.data.token);
             console.log(response.data.message); 
             return response.data;
@@ -38,6 +38,29 @@ export const githubLogin = createAsyncThunk<GithubLoginResponse, string>('token/
         return thunkAPI.rejectWithValue('An error occurred');
     }
 });
+
+export const testUserLogin = createAsyncThunk<GithubLoginResponse, string>('token/testUserLogin', async (email, thunkAPI) => {
+
+    try {
+        console.log(email)
+        const response = await axios.post(backendHost + '/api/v1/users/testUserLogin',{
+            email: email
+        
+        });
+        if (response.status === 200) {
+            Cookies.set('token', response.data.token);
+            console.log(response.data.message); 
+            return response.data;
+        } else {
+            console.error('Authentication failed');
+            return thunkAPI.rejectWithValue('Authentication failed');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return thunkAPI.rejectWithValue('An error occurred');
+    }
+    }
+);
 
 export const googleLogin = createAsyncThunk<GithubLoginResponse, string>('token/googleLogin', async (code, thunkAPI) => {
     try {
@@ -71,6 +94,20 @@ export const tokenSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(githubLogin.rejected, (state, action) => {
+                state.status = 'failed';
+                Cookies.remove('token');
+                Cookies.set('loggedIn', 'false');
+                state.error = action.payload as string;
+            })
+            .addCase(testUserLogin.fulfilled, (state, action: PayloadAction<GithubLoginResponse>) => {
+                state.token = action.payload.token;
+                Cookies.set('token', action.payload.token);
+                Cookies.set('loggedIn', 'true');
+            })
+            .addCase(testUserLogin.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(testUserLogin.rejected, (state, action) => {
                 state.status = 'failed';
                 Cookies.remove('token');
                 Cookies.set('loggedIn', 'false');
