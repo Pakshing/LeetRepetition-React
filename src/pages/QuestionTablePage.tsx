@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Space, Table, Tag } from 'antd';
+import { Button, Space, Table, Tag, Input } from 'antd';
 import type { TableProps } from 'antd';
 import {tagColors,difficultyColors} from '../utils/TableItemColors'
 import { useAppDispatch, useAppSelector } from '../app/store';
@@ -22,6 +22,7 @@ const QuestionTablePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const questions = useAppSelector((state) => state.questionTableStore.questions);
   const [filterActive, setFilterActive] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     if(Cookies.get("loggedIn") === "true"){
@@ -35,6 +36,10 @@ const QuestionTablePage: React.FC = () => {
       dataIndex: 'title',
       key: 'title',
       render: (title, record) => <UpdateReviewDateModal question={record} />,
+      sorter: {
+        compare: (a, b) => a.title.localeCompare(b.title),
+        multiple: 1,
+      },
     },
     {
       title: 'Difficulty',
@@ -44,18 +49,30 @@ const QuestionTablePage: React.FC = () => {
       <Tag color={difficultyColors(difficult)} key={difficult}>
       {difficult.toUpperCase()}
     </Tag>,
+          sorter: {
+            compare: (a, b) => a.difficulty.localeCompare(b.difficulty),
+            multiple: 2,
+          },
     },
     {
       title: 'Last Completion',
       dataIndex: 'last_completion',
       key: 'last_completion',
       render: (isoString) => <span>{new Date(isoString).toDateString()}</span>,
+      sorter: {
+        compare: (a, b) => new Date(a.last_completion).getTime() - new Date(b.last_completion).getTime(),
+        multiple: 3,
+      },
     },
     {
       title: 'Next Review',
       dataIndex: 'next_review',
       key: 'next_review',
       render: (isoString:string) => <span>{ get_next_review_string(isoString) }</span>,
+      sorter: {
+        compare: (a, b) => new Date(a.next_review).getTime() - new Date(b.next_review).getTime(),
+        multiple: 4,
+      },
     },
     {
         title: 'Tags',
@@ -70,6 +87,10 @@ const QuestionTablePage: React.FC = () => {
                 ))}
             </>
         ),
+        sorter: {
+            compare: (a, b) => a.tags.join('').localeCompare(b.tags.join('')),
+            multiple: 5,
+        },
     },
     {
       title: 'Action',
@@ -100,6 +121,11 @@ const QuestionTablePage: React.FC = () => {
     }
   }
 
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+  };
+
+
   const filteredQuestions = filterActive
     ? questions.filter((question) => {
         const today = new Date();
@@ -110,6 +136,11 @@ const QuestionTablePage: React.FC = () => {
       })
     : questions;
 
+    const searchedQuestions = filteredQuestions.filter((question) =>
+    question.title.toLowerCase().includes(searchText.toLowerCase())
+    ); 
+
+
   return (
     <div
       style={{
@@ -117,26 +148,44 @@ const QuestionTablePage: React.FC = () => {
         minHeight: 360,
         minWidth: '50%',
         width:'80%',
-        
-        
       }}
     >
-      <div style={{display:"flex",gap:"1rem", marginBottom:"1rem"}}>
-        <Button 
-          type="default" 
-          onClick={() => setFilterActive(!filterActive)}
-          style={{ backgroundColor: 'orange', borderColor: 'orange', color: 'white' }}
+      
+    <div style={{display:"flex", justifyContent: "space-between", gap:"1rem", marginBottom:"1rem"}}>
+        <div style={{display: "flex", gap: "1rem"}}>
+            <Button 
+                type="default" 
+                onClick={() => setFilterActive(!filterActive)}
+                style={{ backgroundColor: 'orange', borderColor: 'orange', color: 'white' }}
+            >
+                {filterActive ? 'All Questions' : 'Show Due'}
+            </Button>
+            {Cookies.get("token") !== null && <AddQuestionModal/>}
+            <Input.Search
+              placeholder="Search by title"
+              onSearch={handleSearch}
+              onChange={e => setSearchText(e.target.value)}
+              style={{ width: 200 }}
+              value = {searchText}
+            /> 
+             <Button 
+            type="default" 
+            onClick={() => {
+                setSearchText('');
+            }}
+           
         >
-          {filterActive ? 'All Questions' : 'Show Due'}
-        </Button>
-        {Cookies.get("token") !== null && <AddQuestionModal/>}
-       
-      </div>
+            Clear
+        </Button> 
+        </div>
+        <b style={{marginTop:'1rem', marginRight:'1rem'}}>Total: {questions.length}</b>
+    </div>
       
       <Table
         columns={columns}
-        dataSource={filteredQuestions}
+        dataSource={searchedQuestions}
         rowKey={(record) => record.id.toString()}
+        showSorterTooltip={{ target: 'sorter-icon' }}
       />
     </div>
   )
