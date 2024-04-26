@@ -132,7 +132,7 @@ const QuestionTablePage: React.FC = () => {
 
   const filteredQuestions = filterActive
     ? questions.filter((question) => {
-        if (question.review_date === null) return true; // include the question if review_date is null
+        if (question.review_date === null) return false; 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const nextReviewDate = new Date(question.review_date);
