@@ -24,7 +24,8 @@ interface GithubLoginResponse {
 
 export const githubLogin = createAsyncThunk<GithubLoginResponse, string>('token/githubLogin', async (code, thunkAPI) => {
     try {
-        const response = await axios.post(backendHost + '/api/v1/oauth2/github/authenticate', code);
+        console.log("code",code)
+        const response = await axios.post(backendHost + '/api/v1/users/oauth2/github/authenticate', {code: code});
         if (response.status === 200) {    
             Cookies.set('token', response.data.token);
             console.log(response.data.message); 

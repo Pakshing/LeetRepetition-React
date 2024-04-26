@@ -21,11 +21,15 @@ type UpdateReviewDateModalProps = {
 
     const handleOk = async() => {
         form.submit();
-
         let review_in_days = form.getFieldValue('next_review')
-        let review_in_long = review_in_days === "never" ? null : get_next_review_long(review_in_days);
         let modifiedQuestion = { ...question };
-        modifiedQuestion.next_review_long = review_in_long ? Number(review_in_long) : null;
+        if(review_in_days === "never") modifiedQuestion.review_date = null
+        else{
+          const reviewDate = new Date();
+          reviewDate.setDate(reviewDate.getDate() + Number(review_in_days));
+          modifiedQuestion.review_date = reviewDate
+        }
+        modifiedQuestion.last_completion = new Date()
         const result = await updateQuestion(modifiedQuestion);
         if (result !== 'Failure') {
             dispatch(fetchQuestions());

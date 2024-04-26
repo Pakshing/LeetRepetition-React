@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Select, Space, Radio, Tag, Checkbox } from 'antd';
-import { addNewQuestion, get_next_review_long, updateQuestion, daysFromTodayStr, editQuestion } from '../../store/features/question/QuestionAPI';
+import {  updateQuestion, daysFromTodayStr} from '../../store/features/question/QuestionAPI';
 import { useAppDispatch } from '../../app/store';
 import { fetchQuestions} from '../../store/features/questionTable/questionTableSlice'
 import { LeetCodeQuestionModel } from '../../data/LeetCodeQuestionModel';
@@ -28,7 +28,7 @@ type EditQuestionModalProps = {
       url: question.url,
       difficulty: question.difficulty,
       tags: question.tags,
-      review_in_days_str: daysFromTodayStr(question.next_review),
+      review_in_days: question.review_date === null? "never": daysFromTodayStr(question.review_date),
     });
     setVisible(true);
     console.log(question)
@@ -42,8 +42,14 @@ type EditQuestionModalProps = {
         modifiedQuestion.url = values.url;
         modifiedQuestion.difficulty = values.difficulty;
         modifiedQuestion.tags = values.tags;
-        modifiedQuestion.next_review_long = values.review_in_days_str === "never" ? null : get_next_review_long(values.review_in_days_str);
-        const result = await editQuestion(modifiedQuestion);
+        if(values.review_in_days === "never") modifiedQuestion.review_date = null
+        else{
+          const reviewDate = new Date();
+          reviewDate.setDate(reviewDate.getDate() + Number(values.review_in_days));
+          modifiedQuestion.review_date = reviewDate
+        }
+        console.log("modifed",modifiedQuestion)
+        const result = await updateQuestion(modifiedQuestion);
         if (result !== 'Failure') {
             dispatch(fetchQuestions());
             form.resetFields();
@@ -130,7 +136,7 @@ type EditQuestionModalProps = {
         <Checkbox value="Bit Manipulation">Bit Manipulation</Checkbox>
         </Checkbox.Group>
       </Form.Item>
-        <Form.Item label="Next Review Date" name="review_in_days_str" rules={[{ required: true, message: 'Please select an option!' }]}>
+        <Form.Item label="Next Review Date" name="review_in_days" rules={[{ required: true, message: 'Please select an option!' }]}>
             <Radio.Group>
             <Radio.Button value="1">Tomorrow</Radio.Button>
             <Radio.Button value="2">2 Days</Radio.Button>

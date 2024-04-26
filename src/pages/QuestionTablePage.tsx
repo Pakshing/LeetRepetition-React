@@ -66,13 +66,17 @@ const QuestionTablePage: React.FC = () => {
     },
     {
       title: 'Next Review',
-      dataIndex: 'next_review',
-      key: 'next_review',
-      render: (isoString:string) => <span>{ get_next_review_string(isoString) }</span>,
+      dataIndex: 'review_date',
+      key: 'review_date',
+      render: (isoString:string) => <span>{ isoString? get_next_review_string(isoString):"Never" }</span>,
       sorter: {
-        compare: (a, b) => new Date(a.next_review).getTime() - new Date(b.next_review).getTime(),
-        multiple: 4,
+      compare: (a, b) => {
+        if (a.review_date === null) return 1; 
+        if (b.review_date === null) return -1; 
+        return new Date(a.review_date).getTime() - new Date(b.review_date).getTime(); 
       },
+      multiple: 4,
+},
     },
     {
         title: 'Tags',
@@ -80,7 +84,7 @@ const QuestionTablePage: React.FC = () => {
         key: 'tags',
         render: (tags) => (
             <>
-                {tags.map((tag:string) => (
+                {tags && tags.map((tag:string) => (
                     <Tag color={tagColors(tag)} key={tag}>
                         {tag.replace(/_/g, ' ').toUpperCase()}
                     </Tag>
@@ -128,17 +132,18 @@ const QuestionTablePage: React.FC = () => {
 
   const filteredQuestions = filterActive
     ? questions.filter((question) => {
+        if (question.review_date === null) return true; // include the question if review_date is null
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const nextReviewDate = new Date(question.next_review);
+        const nextReviewDate = new Date(question.review_date);
         nextReviewDate.setHours(0, 0, 0, 0);
-        return nextReviewDate.getTime() <= today.getTime() && question.next_review !== null;
+        return nextReviewDate.getTime() <= today.getTime();
       })
     : questions;
 
-    const searchedQuestions = filteredQuestions.filter((question) =>
+  const searchedQuestions = filteredQuestions.filter((question) =>
     question.title.toLowerCase().includes(searchText.toLowerCase())
-    ); 
+  );
 
 
   return (

@@ -8,6 +8,6 @@ export interface LeetCodeQuestionModel {
     date_created: Date;
     last_completion: Date;
     difficulty: "EASY" | "MEDIUM" | "HARD";
-    next_review: Date;
-    next_review_long: number | null;
+    review_date: Date|null;
+    
 }

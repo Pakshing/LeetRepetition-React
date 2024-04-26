@@ -30,10 +30,10 @@ const initialState: QuestionTableState = {
 export const fetchQuestions = createAsyncThunk(
   'questions/find',
   async (thunkAPI) => {
-    const token = Cookies.get('token');
     const response = await axios.get(backendHost+'/api/v1/questions/find', {
       headers: {
-        Authorization: `Bearer ${token}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Cookies.get("token")}`
       }
     });
     console.log(response.data)

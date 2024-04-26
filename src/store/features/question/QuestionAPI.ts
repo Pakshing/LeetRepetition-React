@@ -19,7 +19,7 @@ export interface QuestionState {
     owner_id: number;
 }
 
-function getProblemNameFromUrl(url:string) {
+function getProblemNameFromUrl(url:string) : string{
     const urlParts = url.split('/');
     const problemIndex = urlParts.indexOf('problems');
     const problemName = urlParts[problemIndex + 1];
@@ -62,42 +62,30 @@ export const get_next_review_long = (review_in:string)=>{
 
 export async function addNewQuestion(question:LeetCodeQuestionModel, review_in_days_str:string) {
     try {
-        const review_in = review_in_days_str=== "never" ? null : get_next_review_long(review_in_days_str);
-        question.owner_id = parseInt(localStorage.getItem("user_id") as string)
+        const reviewDate = new Date();
+        reviewDate.setDate(reviewDate.getDate() + Number(review_in_days_str));
         question.title = getProblemNameFromUrl(question.url);
       const response = await axios.post(backendHost+'/api/v1/questions', {
         url: question.url,
         title: question.title,
         difficulty: question.difficulty,
         tags: question.tags,
-        next_review_long: review_in,
+        review_date: reviewDate,
       },{
         headers: {
           'Authorization': `Bearer ${Cookies.get("token")}`
         }
-      
       });
-      if (response.status === 201) {
-        console.log('question created successfully');
-        console.log(response.data)
-        return response.data;
-      } else{
-        alert('Question creation failed');
-        return 'Failure';
-      }
     } catch (error : any) {
-        if(error.response.status === 409){
-            alert('Failed to add question.');
-        }
-      console.error(error.message);
+      console.log(error.response.data.message)
+      alert(error.response.data.message)
       return 'Failure';
     }
   }
 export async function updateQuestion(question:LeetCodeQuestionModel) {
     try {
-        const response = await axios.put(backendHost+`/api/v1/questions/update/${question.id}`, {
-            next_review_long: question.next_review_long,
-            owner_id: question.owner_id,
+        const response = await axios.put(backendHost+`/api/v1/questions/${question.id}`, {
+            question: question,
           },{
             headers: {
               'Authorization': `Bearer ${Cookies.get("token")}`
@@ -118,34 +106,6 @@ export async function updateQuestion(question:LeetCodeQuestionModel) {
     }
 }
 
-export async function editQuestion(question:LeetCodeQuestionModel) {
-  try {
-      const response = await axios.put(backendHost+`/api/v1/questions/edit/${question.id}`, {
-          url: question.url,
-          title: question.title,
-          difficulty: question.difficulty,
-          tags: question.tags,
-          next_review_long: question.next_review_long,
-          owner_id: question.owner_id,
-        },{
-          headers: {
-            'Authorization': `Bearer ${Cookies.get("token")}`
-          }
-        
-        });
-
-      if (response.status === 200) {
-          console.log('Question updated successfully');
-          return response.data;
-      } else {
-          console.error('Question update failed');
-          return 'Failure';
-      }
-  } catch (error: any) {
-      console.error(error.message);
-      return 'Failure';
-  }
-}
 export async function deleteQuestion(id:number) {
     try {
         const response = await axios.delete(backendHost+`/api/v1/questions/${id}`,{
