@@ -23,6 +23,7 @@ interface GithubLoginResponse {
 }
 
 export const githubLogin = createAsyncThunk<GithubLoginResponse, string>('token/githubLogin', async (code, thunkAPI) => {
+    console.log('backendhost',backendHost)
     try {
         console.log("code",code)
         const response = await axios.post(backendHost + '/api/v1/users/oauth2/github/authenticate', {code: code});
