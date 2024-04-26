@@ -86,11 +86,12 @@ useEffect(() => {
           items={items}
           style={{ flex: 1, minWidth: 0, marginLeft:"1rem", backgroundColor:'#1A1F2B'}}
         /> : null}
-          <span style={{marginRight:'1rem', color:'white'}}>Beta</span>
+        <div><span style={{marginRight:'1rem', color:'white'}}>Beta</span>
           {Cookies.get("loggedIn") === "true"?  <Button onClick={logoutOnClick}>
         <b>Log Out</b>
       </Button>: <LoginModal /> }
-          
+</div>
+                    
     </Header>
   )
 }
