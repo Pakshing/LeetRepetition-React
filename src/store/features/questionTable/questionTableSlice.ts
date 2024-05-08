@@ -36,7 +36,6 @@ export const fetchQuestions = createAsyncThunk(
         'Authorization': `Bearer ${Cookies.get("token")}`
       }
     });
-    console.log(response.data)
     return response.data;
   }
 );

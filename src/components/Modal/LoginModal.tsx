@@ -42,10 +42,6 @@ const LoginModal: React.FC = () => {
     setOpen(false);
   };
 
-  const onLocalGenerateUser = () => {
-    const userConfirmed = window.confirm("This is a one time only local account, no data will be reserved after logout. Are you sure you want to proceed?");
-    if(userConfirmed) dispatch(createUser({email:"",loginMethod:"Local"}));
-  }
 
 const redirectToGoogleOAuth = () => {
     const clientId = process.env.REACT_APP_GG_APP_ID; // Replace with your client ID

@@ -8,6 +8,7 @@ import LoginButton from '../Button/LoginButton'
 import LoginModal from '../Modal/LoginModal';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
+import {jwtDecode} from 'jwt-decode';
 import axios from 'axios';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -19,6 +20,19 @@ function AppHeader() {
   const token = useAppSelector((state) => state.tokenStore.token);
 
 useEffect(() => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      const dateNow = new Date();
+      if (decodedToken.exp < dateNow.getTime() / 1000) {
+        console.log('Token has expired');
+        const allCookies = Cookies.get(); 
+        for (let cookie in allCookies) {
+          Cookies.remove(cookie); 
+        }
+        navigate('/');
+      } 
+    }
     const fetchUser = async () => {
         const query = new URLSearchParams(window.location.search);
         const code = query.get('code');
