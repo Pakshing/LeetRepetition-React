@@ -113,7 +113,7 @@ const AddQuestionModal: React.FC = () => {
         <Checkbox value="Sorting">Sorting</Checkbox>
         <Checkbox value="Backtracking">Backtracking</Checkbox>
         <Checkbox value="Intervals">Intervals</Checkbox>
-        <Checkbox value="MATH&Math & Geometry">Math & Geometry</Checkbox>
+        <Checkbox value="MATH & Geometry">Math & Geometry</Checkbox>
         <Checkbox value="Bit Manipulation">Bit Manipulation</Checkbox>
     </Checkbox.Group>
 </Form.Item>

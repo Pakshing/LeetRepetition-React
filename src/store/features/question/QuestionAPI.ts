@@ -6,9 +6,6 @@ import Cookies from 'js-cookie';
 const backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
 
 
-
-
-
 export interface QuestionState {
     id: number;
     url: string;
@@ -65,7 +62,9 @@ export async function addNewQuestion(question:LeetCodeQuestionModel, review_in_d
         const reviewDate = new Date();
         reviewDate.setDate(reviewDate.getDate() + Number(review_in_days_str));
         question.title = getProblemNameFromUrl(question.url);
-      const response = await axios.post(backendHost+'/api/v1/questions', {
+        question.tags = sortTags(question.tags);
+        question.url = trimUrl(question.url);
+        const response = await axios.post(backendHost+'/api/v1/questions', {
         url: question.url,
         title: question.title,
         difficulty: question.difficulty,
@@ -84,6 +83,8 @@ export async function addNewQuestion(question:LeetCodeQuestionModel, review_in_d
   }
 export async function updateQuestion(question:LeetCodeQuestionModel) {
     try {
+        question.tags = sortTags(question.tags);
+        question.url = trimUrl(question.url);
         const response = await axios.put(backendHost+`/api/v1/questions/${question.id}`, {
             question: question,
           },{
@@ -115,10 +116,8 @@ export async function deleteQuestion(id:number) {
         
         });
         if (response.status === 200) {
-            console.log('Question deleted successfully');
             return response.data;
         } else {
-            console.error('Question delete failed');
             return 'Failure';
         }
     } catch (error: any) {
@@ -174,3 +173,16 @@ export const get_next_review_string = (isoString: string | null) => {
     return `In ${diffInDays} day(s)`;
   };
 
+
+const sortTags = (tags: string[]) => {
+    const tagsCopy = [...tags];
+    tagsCopy.sort();
+    return tagsCopy;
+}
+
+const trimUrl = (url: string): string =>{
+  const urlObj = new URL(url);
+  const pathParts = urlObj.pathname.split('/');
+  const newPath = pathParts.slice(0, 3).join('/');
+  return `${urlObj.protocol}//${urlObj.host}${newPath}`;
+}
