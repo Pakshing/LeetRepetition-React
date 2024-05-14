@@ -56,7 +56,7 @@ const redirectToGoogleOAuth = () => {
   const onTestingUserAccount = () => {
     dispatch(testUserLogin(process.env.REACT_APP_TEST_USER_EMAIL||"testuser@local.com"))
     .then(()=>{
-      navigate('/question');
+      navigate('/questions');
     })
 
   }
@@ -87,7 +87,7 @@ const redirectToGoogleOAuth = () => {
                   if(email !== "Failure"){
                     dispatch(createUser({email:email,loginMethod:"Google"}))
                     .then(()=>{
-                      navigate('/question');
+                      navigate('/questions');
                     })
                   }
                 }

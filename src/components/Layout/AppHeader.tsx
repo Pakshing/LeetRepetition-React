@@ -17,7 +17,6 @@ function AppHeader() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation()
-  const token = useAppSelector((state) => state.tokenStore.token);
 
 useEffect(() => {
     const token = Cookies.get('token');
@@ -41,13 +40,13 @@ useEffect(() => {
         if (state === 'google' && code) {
             dispatch(googleLogin(code)).then((action) => {
                 if (googleLogin.fulfilled.match(action)) {
-                    navigate('/question');
+                    navigate('/questions');
                 }
             });
         } else if (state === 'github' && code) {
             dispatch(githubLogin(code)).then((action) => {
                 if (githubLogin.fulfilled.match(action)) {
-                    navigate('/question');
+                    navigate('/questions');
                 }
             });
         }
@@ -61,7 +60,7 @@ useEffect(() => {
   const items = [
     {
       key: 1,
-      label: <Link to="/question"> <b style={{color:'white'}}> Question</b></Link>,
+      label: <Link to="/questions"> <b style={{color:'white'}}> Question</b></Link>,
   }];
   
   const {

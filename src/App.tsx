@@ -3,9 +3,10 @@ import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import './App.css';
 import QuestionTable from './pages/QuestionTablePage';
 import Home from './pages/Home';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import AppHeader from './components/Layout/AppHeader';
 import AppFooter from './components/Layout/AppFooter';
+import PrivateRoutes from './utils/PrivateRoutes';
 
 
 const { Content } = Layout;
@@ -41,8 +42,11 @@ function App() {
             >
               
                 <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/question" element={<QuestionTable />} />
+                  <Route element={<Home />}  path="/"/>
+                  <Route element={<PrivateRoutes />}>
+                    <Route element={<QuestionTable/>} path="/questions"/>
+                  </Route>
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </div>
           </Content>
